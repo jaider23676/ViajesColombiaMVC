@@ -54,6 +54,79 @@ namespace ViajesColombiaMVC.Controllers
             return View();
         }
 
+
+        // -----------------------------------------
+        // TRANSPORTE ASIGNADO AL CLIENTE (CLIENTE) - VERSIÓN CORREGIDA
+        // -----------------------------------------
+        public async Task<IActionResult> TransporteCliente(int id)
+        {
+            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? rolId = HttpContext.Session.GetInt32("RolId");
+
+            if (usuarioId == null)
+                return RedirectToAction("Login", "Acceso");
+
+            if (rolId != 2)
+                return RedirectToAction("Cliente", "Home");
+
+            try
+            {
+                // VERSIÓN 100% FUNCIONAL - SIN PROPIEDADES FALTANTES
+                // Solo usamos relaciones que SÍ existen
+
+                // Primero, obtener los IDs de paquetes del cliente
+                var paqueteIds = await _context.Reservas
+                    .Where(r => r.UsuarioId == id)
+                    .Select(r => r.PaqueteId)
+                    .Distinct()
+                    .ToListAsync();
+
+                if (!paqueteIds.Any())
+                {
+                    ViewBag.Message = "No tienes reservas activas.";
+                    return View(new List<TransportePaquete>());
+                }
+
+                // Buscar transportes relacionados con esos paquetes
+                // NOTA: NO usamos Include para propiedades que no existen
+                var transportes = await _context.TransportePaquetes
+                    .Where(t => paqueteIds.Contains(t.PaqueteId))
+                    .ToListAsync();
+
+                if (!transportes.Any())
+                {
+                    ViewBag.Message = "Tus reservas están confirmadas, pero el transporte aún está siendo asignado.";
+                    return View(transportes);
+                }
+
+                // Cargar datos relacionados MANUALMENTE para evitar errores
+                foreach (var transporte in transportes)
+                {
+                    // Cargar Paquete
+                    transporte.Paquete = await _context.PaquetesTuristicos
+                        .FirstOrDefaultAsync(p => p.Id == transporte.PaqueteId);
+
+                    // Cargar Conductor (si existe la relación)
+                    if (transporte.ConductorId > 0)
+                    {
+                        transporte.Conductor = await _context.Conductores
+                            .FirstOrDefaultAsync(c => c.ConductorId == transporte.ConductorId);
+                    }
+                }
+
+                return View(transportes);
+            }
+            catch (Exception ex)
+            {
+                // Si hay error, mostrar página informativa
+                ViewBag.Title = "Mi Transporte";
+                ViewBag.Message = "Estamos trabajando en mejorar esta funcionalidad.";
+                ViewBag.Error = ex.Message;
+                return View(new List<TransportePaquete>());
+            }
+        }
+
+
         // -----------------------------------------
         // CREAR RESERVA (POST) CON PAGO
         // -----------------------------------------

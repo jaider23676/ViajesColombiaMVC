@@ -1,0 +1,213 @@
+﻿@model List<ViajesColombiaMVC.Models.TransportePaquete>
+
+@{
+    ViewData["Title"] = "Mi Transporte";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .simple-card {
+        background: rgba(25, 35, 55, 0.8);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .simple-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.1);
+    }
+    
+    .icon-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 193, 7, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+</style>
+
+<div class="container py-4 mt-4">
+    
+    <!-- ENCABEZADO SIMPLE -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-4">
+                <div class="icon-circle">
+                    <i class="bi bi-truck text-warning fs-4"></i>
+                </div>
+                <div>
+                    <h1 class="text-warning fw-bold mb-1">Mi Transporte</h1>
+                    <p class="text-light mb-0">Información básica de tus transportes</p>
+                </div>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(ViewBag.Message))
+            {
+                <div class="alert alert-dark border-warning mb-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    @ViewBag.Message
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    @if (Model == null || !Model.Any())
+    {
+        <!-- SIN TRANSPORTES -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="simple-card p-4 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-truck text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="text-warning mb-3">Sin Transportes</h4>
+                    <p class="text-light mb-4">
+                        No tienes transportes asignados actualmente.
+                    </p>
+                    <a href="/Reservas/MisReservas" class="btn btn-warning">
+                        Ver Mis Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- LISTA SIMPLE DE TRANSPORTES -->
+        <div class="row">
+            @foreach (var transporte in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="simple-card h-100 p-3">
+                        
+                        <!-- FECHA Y PAQUETE -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-warning text-dark">
+                                    @transporte.Fecha.ToString("dd/MM")
+                                </span>
+                                <small class="text-light">ID: @transporte.Id</small>
+                            </div>
+                            
+                            <h6 class="text-warning mb-2">
+                                <i class="bi bi-briefcase me-1"></i>
+                                @(transporte.Paquete?.Nombre ?? "Paquete turístico")
+                            </h6>
+                            
+                            @if (!string.IsNullOrEmpty(transporte.Actividad))
+                            {
+                                <p class="text-light small mb-2">
+                                    <i class="bi bi-activity me-1"></i>
+                                    @transporte.Actividad
+                                </p>
+                            }
+                        </div>
+                        
+                        <!-- CONDUCTOR (si existe) -->
+                        @if (transporte.Conductor != null)
+                        {
+                            <div class="mb-3 pt-3 border-top border-secondary">
+                                <h6 class="text-light mb-2">
+                                    <i class="bi bi-person me-1"></i> Conductor
+                                </h6>
+                                <p class="text-warning fw-bold mb-1">@transporte.Conductor.Nombre</p>
+                                
+                                @if (!string.IsNullOrEmpty(transporte.Conductor.Telefono))
+                                {
+                                    <p class="text-light small mb-1">
+                                        <i class="bi bi-telephone me-1"></i>
+                                        @transporte.Conductor.Telefono
+                                    </p>
+                                }
+                                
+                                @if (!string.IsNullOrEmpty(transporte.Conductor.Licencia))
+                                {
+                                    <p class="text-light small">
+                                        <i class="bi bi-card-text me-1"></i>
+                                        Licencia: @transporte.Conductor.Licencia
+                                    </p>
+                                }
+                            </div>
+                        }
+                        
+                        <!-- INFORMACIÓN ADICIONAL DEL PAQUETE -->
+                        @if (transporte.Paquete != null && !string.IsNullOrEmpty(transporte.Paquete.Descripcion))
+                        {
+                            <div class="pt-3 border-top border-secondary">
+                                <p class="text-light small mb-0">
+                                    @{
+                                        var descripcion = transporte.Paquete.Descripcion.Length > 100 
+                                            ? transporte.Paquete.Descripcion.Substring(0, 100) + "..." 
+                                            : transporte.Paquete.Descripcion;
+                                    }
+                                    @descripcion
+                                </p>
+                            </div>
+                        }
+                        
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- RESUMEN -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="simple-card p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-warning mb-0">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Resumen
+                            </h6>
+                            <p class="text-light small mb-0">
+                                Total de transportes: <strong>@Model.Count</strong>
+                            </p>
+                        </div>
+                        <div>
+                            <a href="/Reservas/MisReservas" class="btn btn-sm btn-outline-light">
+                                <i class="bi bi-list-check me-1"></i> Ver Reservas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    <!-- BOTONES DE NAVEGACIÓN -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/Cliente/Dashboard" class="btn btn-outline-light flex-grow-1">
+                    <i class="bi bi-house-door me-2"></i> Inicio
+                </a>
+                <a href="/Reservas/MisReservas" class="btn btn-warning flex-grow-1">
+                    <i class="bi bi-journal-check me-2"></i> Reservas
+                </a>
+                <a href="/Paquetes" class="btn btn-outline-warning flex-grow-1">
+                    <i class="bi bi-map me-2"></i> Paquetes
+                </a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación mínima
+        const cards = document.querySelectorAll('.simple-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 50 * index);
+        });
+    });
+</script>

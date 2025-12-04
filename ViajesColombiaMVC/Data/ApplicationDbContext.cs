@@ -40,6 +40,8 @@ namespace ViajesColombiaMVC.Models
         // =======================
         public DbSet<TransportePaquete> TransportePaquetes { get; set; }
 
+        public DbSet<Vehiculo> Vehiculos { get; set; }
+
         // =======================
         // Pagos
         // =======================

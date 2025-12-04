@@ -14,6 +14,14 @@ namespace ViajesColombiaMVC.Models
         public int ConductorId { get; set; }
         public Conductor Conductor { get; set; }
 
+        [Column("vehiculo_id")]
+        public int? VehiculoId { get; set; }
+        public Vehiculo Vehiculo { get; set; }
+
+        [Column("reserva_id")]
+        public int? ReservaId { get; set; }
+        public Reserva Reserva { get; set; }
+
         public DateTime Fecha { get; set; }
         public string Actividad { get; set; }
        

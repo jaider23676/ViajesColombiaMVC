@@ -1,0 +1,324 @@
+﻿@model ViajesColombiaMVC.Models.Conductor
+
+@{
+    ViewData["Title"] = "Mi Conductor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .driver-card {
+        background: linear-gradient(145deg, rgba(30, 40, 60, 0.9), rgba(20, 30, 50, 0.95));
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .driver-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 193, 7, 0.6);
+            box-shadow: 0 10px 20px rgba(255, 193, 7, 0.1);
+        }
+
+    .driver-photo-placeholder {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: rgba(255, 193, 7, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid rgba(255, 193, 7, 0.3);
+        margin: 0 auto;
+    }
+
+    .contact-btn {
+        transition: all 0.3s ease;
+    }
+
+        .contact-btn:hover {
+            transform: scale(1.05);
+        }
+
+    .rating-stars {
+        color: #ffc107;
+        font-size: 1.2rem;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- ENCABEZADO -->
+            <div class="text-center mb-5">
+                <h1 class="text-warning fw-bold mb-3">
+                    <i class="bi bi-person-badge me-3"></i>Mi Conductor
+                </h1>
+                <p class="text-light fs-5">
+                    Información detallada de tu conductor asignado
+                </p>
+            </div>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            @if (Model == null)
+            {
+                <!-- SIN CONDUCTOR ASIGNADO -->
+                <div class="driver-card p-5 text-center">
+                    <div class="mb-4">
+                        <div class="driver-photo-placeholder mb-4">
+                            <i class="bi bi-person-x text-warning" style="font-size: 4rem;"></i>
+                        </div>
+                        <h3 class="text-warning mb-3">Sin Conductor Asignado</h3>
+                        <p class="text-light mb-4">
+                            @(ViewBag.Message ?? "Actualmente no tienes un conductor asignado. Esto es normal si aún no has realizado reservas con transporte incluido.")
+                        </p>
+                        <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                            <a href="/Reservas/Create" class="btn btn-gradient px-4">
+                                <i class="bi bi-plus-circle me-2"></i> Crear Reserva
+                            </a>
+                            <a href="/Reservas/TransporteCliente/@Context.Session.GetInt32("UsuarioId")"
+                               class="btn btn-outline-warning px-4">
+                                <i class="bi bi-truck me-2"></i> Ver Mi Transporte
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- CON CONDUCTOR ASIGNADO -->
+                <div class="driver-card p-4 p-md-5">
+
+                    <!-- FOTO Y NOMBRE -->
+                    <div class="text-center mb-5">
+                        <div class="driver-photo-placeholder mb-4">
+                            @if (!string.IsNullOrEmpty(Model.Foto))
+                            {
+                                <img src="@Model.Foto"
+                                     alt="@Model.Nombre"
+                                     class="rounded-circle w-100 h-100 object-fit-cover">
+                            }
+                            else
+                            {
+                                <i class="bi bi-person-circle text-warning" style="font-size: 5rem;"></i>
+                            }
+                        </div>
+
+                        <h2 class="text-warning fw-bold mb-2">@Model.Nombre</h2>
+                        <p class="text-light">Tu conductor asignado</p>
+
+                        <!-- CALIFICACIÓN -->
+                        @if (Model.Calificacion > 0)
+                        {
+                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="rating-stars me-3">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi @(i <= Model.Calificacion ? "bi-star-fill" : "bi-star")"></i>
+                                    }
+                                </div>
+                                <span class="text-light fw-bold">@Model.Calificacion.ToString("0.0")/5.0</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- INFORMACIÓN DETALLADA -->
+                    <div class="row">
+
+                        <!-- INFORMACIÓN PERSONAL -->
+                        <div class="col-md-6 mb-4">
+                            <h4 class="text-warning mb-4">
+                                <i class="bi bi-person-lines-fill me-2"></i>Información Personal
+                            </h4>
+                            <div class="mb-3">
+                                <small class="text-light d-block">Nombre Completo</small>
+                                <p class="text-warning fw-bold mb-0">@Model.Nombre</p>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Licencia))
+                            {
+                                <div class="mb-3">
+                                    <small class="text-light d-block">Licencia de Conducción</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Licencia</p>
+                                </div>
+                            }
+
+                            @if (Model.Experiencia > 0)
+                            {
+                                <div class="mb-3">
+                                    <small class="text-light d-block">Experiencia</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Experiencia años</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Zona))
+                            {
+                                <div>
+                                    <small class="text-light d-block">Zona de Operación</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Zona</p>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- INFORMACIÓN DE CONTACTO -->
+                        <div class="col-md-6 mb-4">
+                            <h4 class="text-warning mb-4">
+                                <i class="bi bi-telephone-fill me-2"></i>Información de Contacto
+                            </h4>
+
+                            @if (!string.IsNullOrEmpty(Model.Telefono))
+                            {
+                                <div class="mb-3">
+                                    <small class="text-light d-block">Teléfono</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Telefono</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Correo))
+                            {
+                                <div class="mb-3">
+                                    <small class="text-light d-block">Correo Electrónico</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Correo</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Especialidad))
+                            {
+                                <div class="mb-3">
+                                    <small class="text-light d-block">Especialidad</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.Especialidad</p>
+                                </div>
+                            }
+
+                            <div>
+                                <small class="text-light d-block">Estado</small>
+                                @if (Model.Disponible)
+                                {
+                                    <span class="badge bg-success px-3 py-2">
+                                        <i class="bi bi-check-circle me-1"></i> Disponible
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary px-3 py-2">
+                                        <i class="bi bi-clock me-1"></i> No Disponible
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- VEHÍCULO ASIGNADO -->
+                    @if (Model.VehiculoAsignado != null)
+                    {
+                        <div class="mt-4 pt-4 border-top border-secondary">
+                            <h4 class="text-warning mb-4">
+                                <i class="bi bi-car-front-fill me-2"></i>Vehículo Asignado
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-light d-block">Vehículo</small>
+                                    <p class="text-warning fw-bold mb-0">
+                                        @Model.VehiculoAsignado.Marca @Model.VehiculoAsignado.Modelo
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-light d-block">Placa</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.VehiculoAsignado.Placa</p>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <small class="text-light d-block">Tipo</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.VehiculoAsignado.Tipo</p>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <small class="text-light d-block">Capacidad</small>
+                                    <p class="text-warning fw-bold mb-0">@Model.VehiculoAsignado.Capacidad personas</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- BOTONES DE ACCIÓN -->
+                    <div class="mt-5 pt-4 border-top border-warning">
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <button class="btn btn-gradient contact-btn px-4 py-2"
+                                    onclick="contactarConductor('@Model.Telefono', '@Model.Nombre')">
+                                <i class="bi bi-telephone-outbound me-2"></i> Contactar por Teléfono
+                            </button>
+
+                            <button class="btn btn-outline-warning contact-btn px-4 py-2"
+                                    onclick="enviarMensaje('@Model.Correo', '@Model.Nombre')">
+                                <i class="bi bi-envelope me-2"></i> Enviar Correo
+                            </button>
+
+                            <a href="/Reservas/TransporteCliente/@Context.Session.GetInt32("UsuarioId")"
+                               class="btn btn-outline-light contact-btn px-4 py-2">
+                                <i class="bi bi-truck me-2"></i> Ver Transporte
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-5">
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="/Cliente/Dashboard" class="btn btn-outline-light px-4">
+                        <i class="bi bi-house-door me-2"></i> Volver al Inicio
+                    </a>
+                    <a href="/Reservas/TransporteCliente/@Context.Session.GetInt32("UsuarioId")"
+                       class="btn btn-warning px-4">
+                        <i class="bi bi-truck me-2"></i> Ver Mi Transporte
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para contactar al conductor
+    function contactarConductor(telefono, nombre) {
+        if (!telefono) {
+            alert('Número de teléfono no disponible para ' + nombre);
+            return;
+        }
+
+        const confirmar = confirm(`¿Deseas llamar a ${nombre}?\n\n📞 Teléfono: ${telefono}\n\nSe abrirá tu aplicación de teléfono.`);
+
+        if (confirmar) {
+            window.location.href = `tel:${telefono}`;
+        }
+    }
+
+    // Función para enviar mensaje
+    function enviarMensaje(correo, nombre) {
+        if (!correo) {
+            alert('Correo electrónico no disponible para ' + nombre);
+            return;
+        }
+
+        const asunto = encodeURIComponent('Consulta sobre transporte - Viajes Colombia');
+        const cuerpo = encodeURIComponent(`Hola ${nombre},\n\nMe gustaría hacerte una consulta sobre el transporte asignado.\n\nSaludos,\n[Tu Nombre]`);
+
+        window.location.href = `mailto:${correo}?subject=${asunto}&body=${cuerpo}`;
+    }
+
+    // Animación de entrada
+    document.addEventListener('DOMContentLoaded', function() {
+        const card = document.querySelector('.driver-card');
+        if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    });
+</script>
