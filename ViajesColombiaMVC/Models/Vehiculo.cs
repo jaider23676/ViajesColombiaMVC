@@ -27,7 +27,8 @@ namespace ViajesColombiaMVC.Models
         public string Color { get; set; }
 
         public int Capacidad { get; set; } = 12;
-        public int Anio { get; set; } = DateTime.Now.Year;
+        
+        public int año { get; set; } = DateTime.Now.Year;
         public string? Foto { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

@@ -115,7 +115,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "PaqueteTuristicoSingular",
-    pattern: "PaqueteTuristico/{action=Index}/{id?}",
+    pattern: "PaquetesTuristicos/{action=Index}/{id?}",
     defaults: new { controller = "Paquetes" }
 );
 
