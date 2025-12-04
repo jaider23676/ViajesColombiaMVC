@@ -1,0 +1,43 @@
+﻿@model ViajesColombiaMVC.Models.Reserva
+
+@{
+    ViewData["Title"] = "Eliminar Reserva";
+}
+
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <h2 class="text-danger fw-bold mb-3">¿Eliminar reserva?</h2>
+
+        <p class="text-muted">Estás a punto de eliminar la siguiente reserva:</p>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item">
+                <strong>Cliente:</strong> @Model.Usuario.Nombre (@Model.Usuario.Correo)
+            </li>
+            <li class="list-group-item">
+                <strong>Paquete:</strong> @Model.Paquete.Nombre
+            </li>
+            <li class="list-group-item">
+                <strong>Personas:</strong> @Model.CantidadPersonas
+            </li>
+            <li class="list-group-item">
+                <strong>Estado:</strong> @Model.Estado
+            </li>
+            <li class="list-group-item">
+                <strong>Fecha:</strong> @Model.FechaReserva.ToString("yyyy-MM-dd HH:mm")
+            </li>
+        </ul>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn btn-danger">
+                Eliminar Reserva
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

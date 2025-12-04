@@ -1,0 +1,240 @@
+﻿<!-- Views/TransportePaquete/Reporte.cshtml -->
+@model IEnumerable<ViajesColombiaMVC.Models.TransportePaquete>
+
+@{
+    ViewData["Title"] = "Reporte de Transportes";
+}
+
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-graph-up text-success"></i> @ViewData["Title"]
+        </h2>
+        <div>
+            <a asp-action="Index" class="btn btn-transporte-secondary">
+                <i class="bi bi-list"></i> Lista
+            </a>
+            <a asp-action="Calendario" class="btn btn-info">
+                <i class="bi bi-calendar-week"></i> Calendario
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card card-transporte mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">
+                <i class="bi bi-filter"></i> Filtros del Reporte
+            </h5>
+            <form method="get" class="row g-3">
+                <div class="col-md-5">
+                    <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio"
+                           value="@ViewBag.FechaInicio" class="form-control bg-dark text-white">
+                </div>
+                <div class="col-md-5">
+                    <label for="fechaFin" class="form-label">Fecha Fin</label>
+                    <input type="date" id="fechaFin" name="fechaFin"
+                           value="@ViewBag.FechaFin" class="form-control bg-dark text-white">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-transporte w-100">
+                        <i class="bi bi-funnel"></i> Generar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Estadísticas generales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Transportes</h5>
+                    <h2 class="text-primary">@ViewBag.TotalTransportes</h2>
+                    <small class="text-muted">En el período</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Período</h5>
+                    <div class="text-info">
+                        @Convert.ToDateTime(ViewBag.FechaInicio).ToString("dd/MM/yyyy")<br />
+                        <small>al</small><br />
+                        @Convert.ToDateTime(ViewBag.FechaFin).ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Días activos</h5>
+                    <h2 class="text-success">@Model.Select(t => t.Fecha.Date).Distinct().Count()</h2>
+                    <small class="text-muted">Días con transporte</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Promedio diario</h5>
+                    @{
+                        var dias = (Convert.ToDateTime(ViewBag.FechaFin) - Convert.ToDateTime(ViewBag.FechaInicio)).Days + 1;
+                        var promedio = dias > 0 ? ViewBag.TotalTransportes / (double)dias : 0;
+                    }
+                    <h2 class="text-warning">@promedio.ToString("0.0")</h2>
+                    <small class="text-muted">Transportes por día</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Conductores -->
+    @if (ViewBag.Estadisticas != null && ViewBag.Estadisticas.Count > 0)
+    {
+        <div class="card card-transporte mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-badge"></i> Estadísticas por Conductor
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-transporte">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Conductor</th>
+                                <th>Licencia</th>
+                                <th>Zona</th>
+                                <th>Asignaciones</th>
+                                <th>Primera</th>
+                                <th>Última</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int contador = 1;
+                                foreach (var item in ViewBag.Estadisticas)
+                                {
+                                    <tr>
+                                        <td>@contador</td>
+                                        <td>@item.Conductor</td>
+                                        <td>@item.Licencia</td>
+                                        <td>@item.Zona</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                                    @{
+                                                        var porcentaje = ViewBag.TotalTransportes > 0 ?
+                                                        (item.TotalAsignaciones * 100.0 / ViewBag.TotalTransportes) : 0;
+                                                    }
+                                                    <div class="progress-bar bg-info"
+                                                         style="width: @porcentaje%"></div>
+                                                </div>
+                                                <span>@item.TotalAsignaciones</span>
+                                            </div>
+                                        </td>
+                                        <td>@item.PrimeraAsignacion.ToString("dd/MM")</td>
+                                        <td>@item.UltimaAsignacion.ToString("dd/MM")</td>
+                                    </tr>
+                                    contador++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Listado detallado -->
+    <div class="card card-transporte">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-list-ul"></i> Detalle de Transportes
+            </h5>
+            <small class="text-muted">@Model.Count() registros encontrados</small>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-transporte">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Paquete</th>
+                                <th>Conductor</th>
+                                <th>Actividad</th>
+                                <th>Contacto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.Fecha.ToString("hh:mm tt")</td>
+                                    <td>@item.Paquete?.Nombre</td>
+                                    <td>
+                                        <strong>@item.Conductor?.Nombre</strong><br />
+                                        <small class="text-muted">@item.Conductor?.Licencia</small>
+                                    </td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 250px;">
+                                            @item.Actividad
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Conductor?.Telefono))
+                                        {
+                                            <a href="tel:@item.Conductor.Telefono" class="btn btn-sm btn-outline-success">
+                                                <i class="bi bi-telephone"></i> @item.Conductor.Telefono
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Sin contacto</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-clipboard-x fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No hay datos para el período seleccionado</h4>
+                    <p class="text-muted">Intenta con un rango de fechas diferente</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .progress {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .progress-bar {
+        border-radius: 4px;
+    }
+
+    .text-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>

@@ -1,0 +1,68 @@
+﻿@model ViajesColombiaMVC.Models.Pago
+@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml"; // Usa tu layout de cliente
+    ViewData["Title"] = "Detalle del Pago";
+}
+
+<div class="container mt-5">
+
+    <h2 class="fw-bold text-primary mb-4">Detalle del Pago</h2>
+
+    <div class="card shadow-lg rounded-4 p-4">
+        <h5 class="mb-3">Reserva: @Model.Reserva.Paquete.Nombre</h5>
+        <p><strong>Fecha de Reserva:</strong> @Model.Reserva.FechaReserva.ToString("dd/MM/yyyy")</p>
+        <p><strong>Monto:</strong> $@Model.Monto</p>
+        <p>
+            <strong>Estado del Pago:</strong>
+            @if (Model.Estado == "Pendiente")
+            {
+                <span class="badge bg-warning text-dark">@Model.Estado</span>
+            }
+            else if (Model.Estado == "Completado")
+            {
+                <span class="badge bg-success">@Model.Estado</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">@Model.Estado</span>
+            }
+        </p>
+
+        <p><strong>Forma de Pago:</strong> @Model.FormaPago.Nombre</p>
+
+        <hr />
+
+        <!-- Subir comprobante -->
+        <h5 class="mb-3">Subir Comprobante</h5>
+        <form asp-action="SubirComprobante" asp-controller="Pagos" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="pagoId" value="@Model.Id" />
+            <div class="mb-3">
+                <input type="file" name="archivo" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-upload me-2"></i> Subir Comprobante
+            </button>
+        </form>
+
+        @if (Model.Comprobantes != null && Model.Comprobantes.Any())
+        {
+            <hr />
+            <h5>Comprobantes Subidos</h5>
+            <ul>
+                @foreach (var comp in Model.Comprobantes)
+                {
+                    <li>
+                        <a href="~/uploads/@comp.Archivo" target="_blank">@comp.Archivo</a> - @comp.CreadoEn.ToString("dd/MM/yyyy HH:mm")
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Reservas" asp-action="MisReservas" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i> Volver a Mis Reservas
+        </a>
+    </div>
+
+</div>

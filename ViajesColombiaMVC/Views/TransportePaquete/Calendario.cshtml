@@ -1,0 +1,190 @@
+﻿<!-- Views/TransportePaquete/Calendario.cshtml -->
+@model IEnumerable<ViajesColombiaMVC.Models.TransportePaquete>
+
+@{
+    ViewData["Title"] = "Calendario de Transportes";
+}
+
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-calendar-week text-info"></i> @ViewData["Title"]
+        </h2>
+        <div>
+            <a asp-action="Index" class="btn btn-transporte-secondary">
+                <i class="bi bi-list"></i> Ver Lista
+            </a>
+            <a asp-action="Create" class="btn btn-transporte">
+                <i class="bi bi-plus-circle"></i> Nuevo Transporte
+            </a>
+        </div>
+    </div>
+
+    <!-- Controles de navegación -->
+    <div class="card card-transporte mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/TransportePaquete/Calendario?month=@ViewBag.PreviousMonth.Month&year=@ViewBag.PreviousMonth.Year"
+                   class="btn btn-transporte-secondary">
+                    <i class="bi bi-chevron-left"></i> @ViewBag.PreviousMonth.ToString("MMMM yyyy")
+                </a>
+
+                <h4 class="text-center mb-0 text-info">@ViewBag.CurrentMonth</h4>
+
+                <a href="/TransportePaquete/Calendario?month=@ViewBag.NextMonth.Month&year=@ViewBag.NextMonth.Year"
+                   class="btn btn-transporte-secondary">
+                    @ViewBag.NextMonth.ToString("MMMM yyyy") <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumen del mes -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total del Mes</h5>
+                    <h2 class="text-primary">@Model.Count()</h2>
+                    <small class="text-muted">Transportes programados</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Conductores</h5>
+                    <h2 class="text-success">@Model.Select(t => t.ConductorId).Distinct().Count()</h2>
+                    <small class="text-muted">Conductores asignados</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-transporte">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Paquetes</h5>
+                    <h2 class="text-warning">@Model.Select(t => t.PaqueteId).Distinct().Count()</h2>
+                    <small class="text-muted">Paquetes con transporte</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transportes agrupados por día -->
+    <div class="card card-transporte">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                @foreach (var diaTransportes in Model.GroupBy(t => t.Fecha.Date).OrderBy(g => g.Key))
+                {
+                    <div class="mb-4 border-bottom pb-4">
+                        <h5 class="mb-3">
+                            <i class="bi bi-calendar-day text-primary"></i>
+                            @diaTransportes.Key.ToString("dddd, dd MMMM yyyy")
+                            <span class="badge @(diaTransportes.Key == DateTime.Today ? "badge-transporte-enruta" : "badge-transporte-planificado") ms-2">
+                                @diaTransportes.Key.ToString("dd/MM")
+                            </span>
+                        </h5>
+
+                        <div class="row">
+                            @foreach (var transporte in diaTransportes.OrderBy(t => t.Fecha))
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card glass-effect">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="card-title mb-0">
+                                                    <i class="bi bi-clock"></i>
+                                                    @transporte.Fecha.ToString("hh:mm tt")
+                                                </h6>
+                                                <a asp-action="Details" asp-route-id="@transporte.Id"
+                                                   class="btn btn-sm btn-info" title="Ver detalles">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </div>
+
+                                            <p class="card-text mb-2">
+                                                <strong><i class="bi bi-flag"></i> Paquete:</strong><br />
+                                                @(transporte.Paquete?.Nombre ?? "No especificado")
+                                            </p>
+
+                                            <p class="card-text mb-2">
+                                                <strong><i class="bi bi-person-badge"></i> Conductor:</strong><br />
+                                                @(transporte.Conductor?.Nombre ?? "No asignado")
+                                            </p>
+
+                                            <p class="card-text mb-3">
+                                                <strong><i class="bi bi-card-text"></i> Actividad:</strong><br />
+                                                <small class="text-muted">
+                                                    @(transporte.Actividad.Length > 80 ?
+                                                                                            transporte.Actividad.Substring(0, 80) + "..." :
+                                                                                            transporte.Actividad)
+                                    </small>
+                                </p>
+
+                                @if (transporte.Conductor?.Telefono != null)
+                                            {
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small>
+                                                        <i class="bi bi-telephone"></i>
+                                                        @transporte.Conductor.Telefono
+                                                    </small>
+                                                    <a href="tel:@transporte.Conductor.Telefono"
+                                                       class="btn btn-sm btn-outline-success">
+                                                        <i class="bi bi-telephone-outbound"></i>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No hay transportes este mes</h4>
+                    <p class="text-muted mb-4">No se han programado transportes para el mes de @ViewBag.CurrentMonth</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Create" class="btn btn-transporte">
+                            <i class="bi bi-plus-circle"></i> Programar Transporte
+                        </a>
+                        <a asp-action="Index" class="btn btn-transporte-secondary">
+                            <i class="bi bi-list"></i> Ver Todos los Transportes
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Estilos específicos para el calendario -->
+<style>
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+        .glass-effect:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 234, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+    .border-bottom {
+        border-bottom: 2px solid rgba(0, 234, 255, 0.2) !important;
+    }
+
+    .card-title i {
+        margin-right: 8px;
+    }
+</style>

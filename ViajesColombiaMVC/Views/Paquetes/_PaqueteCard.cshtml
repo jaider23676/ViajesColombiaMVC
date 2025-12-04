@@ -1,0 +1,47 @@
+﻿@model PaqueteTuristico
+
+<div class="col-md-4 mb-4">
+    <div class="card paquete-card shadow-sm">
+
+        @if (!string.IsNullOrEmpty(Model.Imagen))
+        {
+            <img src="~/images/paquetes/@Model.Imagen"
+                 class="card-img-top"
+                 style="height: 200px; object-fit: cover;" />
+        }
+        else
+        {
+            <img src="~/images/no-image.png"
+                 class="card-img-top"
+                 style="height: 200px; object-fit: cover;" />
+        }
+
+        <div class="card-body">
+            <h5 class="card-title fw-bold">@Model.Nombre</h5>
+
+            <p class="card-text text-muted">@Model.Descripcion</p>
+
+            <p class="fw-bold text-primary">
+                Precio: @Model.Precio.ToString("C")
+            </p>
+
+            <div class="d-grid gap-2">
+                <a asp-controller="Paquetes"
+                   asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-primary">
+                    Ver Detalles
+                </a>
+
+                <a asp-controller="Itinerarios"
+                   asp-action="Create"
+                   asp-route-paqueteId="@Model.Id"
+                   class="btn btn-outline-primary">
+                    ➕ Agregar Itinerario
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+

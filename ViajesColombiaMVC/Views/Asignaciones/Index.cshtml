@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.AsignacionConductor>
+
+<h2>Asignaciones de Conductores</h2>
+
+<a href="@Url.Action("Create")" class="btn btn-primary mb-3">Nueva Asignación</a>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Conductor</th>
+            <th>Fecha</th>
+            <th>Motivo</th>
+            <th>Activo</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Usuario?.Nombre</td>
+                <td>@a.Conductor?.Nombre</td>
+                <td>@a.FechaAsignacion</td>
+                <td>@a.Motivo</td>
+                <td>@(a.Activo ? "Sí" : "No")</td>
+                <td>
+                    @if (a.Activo)
+                    {
+                        <form asp-action="Desactivar" method="post">
+                            <input type="hidden" name="id" value="@a.Id" />
+                            <button class="btn btn-danger btn-sm">Desactivar</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

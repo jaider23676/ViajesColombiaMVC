@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.ViewModels.ReporteVentasViewModel>
+
+<h2>💵 Reporte de Ventas por Forma de Pago</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Forma de Pago</th>
+            <th>Total Monto</th>
+            <th>Total Transacciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>@v.FormaPago</td>
+                <td>$@v.TotalMonto</td>
+                <td>@v.CantidadPagos</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,38 @@
+﻿@model ViajesColombiaMVC.Models.AsignacionConductor
+
+@{
+    ViewData["Title"] = "Asignar Conductor";
+}
+
+<div class="container py-4">
+    <h2 class="fw-bold text-primary mb-4">
+        <i class="bi bi-person-plus"></i> Asignar Conductor
+    </h2>
+
+    <form asp-action="Asignar" method="post" class="card p-4 shadow-lg">
+
+        <input type="hidden" asp-for="UsuarioId" value="@ViewBag.UsuarioId" />
+
+        <div class="mb-3">
+            <label class="form-label"><strong>Conductor:</strong></label>
+            <select asp-for="ConductorId" class="form-select">
+                <option value="">Seleccione...</option>
+
+                @foreach (var c in ViewBag.Conductores)
+                {
+                    <!-- Cambiado de c.Id a c.ConductorId -->
+                    <option value="@c.ConductorId">@c.Nombre (@c.Especialidad)</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label"><strong>Motivo:</strong></label>
+            <textarea asp-for="Motivo" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+            <i class="bi bi-check-circle"></i> Asignar
+        </button>
+    </form>
+</div>

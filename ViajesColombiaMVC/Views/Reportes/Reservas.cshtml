@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.ViewModels.ReporteReservasViewModel>
+
+<h2>📅 Reporte de Reservas por Paquete</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Paquete</th>
+            <th>Total Reservas</th>
+            <th>Personas Totales</th>
+            <th>Ventas Totales</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Paquete</td>
+                <td>@r.TotalReservas</td>
+                <td>@r.PersonasTotales</td>
+                <td>$@r.VentasTotales</td>
+            </tr>
+        }
+    </tbody>
+</table>

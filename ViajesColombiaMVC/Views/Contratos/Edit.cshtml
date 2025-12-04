@@ -1,0 +1,33 @@
+﻿@model ViajesColombiaMVC.Models.Contrato
+
+<h3>Editar Contrato</h3>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ProveedorId" />
+
+    <div class="mb-3">
+        <label>Fecha Inicio</label>
+        <input asp-for="FechaInicio" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha Fin</label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Valor</label>
+        <input asp-for="Valor" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+
+    <a href="/Contratos?proveedorId=@Model.ProveedorId" class="btn btn-secondary">Cancelar</a>
+</form>

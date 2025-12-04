@@ -1,0 +1,95 @@
+﻿@model List<ViajesColombiaMVC.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Mis Reservas";
+}
+
+<div class="container mt-5">
+
+    <h2 class="fw-bold text-primary mb-4">Mis Reservas</h2>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            Aún no tienes reservas registradas.
+        </div>
+        <div class="text-center mt-3">
+            <a asp-controller="Reservas" asp-action="Create" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle me-2"></i> Crear mi primera reserva
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-lg rounded-4">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Paquete</th>
+                        <th>Personas</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        var estadoClass = r.Estado switch
+                        {
+                            "Pendiente" => "badge bg-warning text-dark",
+                            "Confirmada" => "badge bg-success",
+                            "Cancelada" => "badge bg-danger",
+                            _ => "badge bg-secondary"
+                        };
+
+                        <tr>
+                            <td>
+                                <strong>@r.Paquete?.Nombre ?? "<span class='text-danger'>Paquete no asignado</span>"</strong>
+                            </td>
+                            <td>@r.CantidadPersonas</td>
+                            <td>@r.FechaReserva.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <span class="@estadoClass">@r.Estado</span>
+                            </td>
+                            <td class="text-center">
+                                @if (r.Estado == "Pendiente")
+                                {
+                                    <form asp-controller="Reservas" asp-action="Eliminar" asp-route-id="@r.Id" method="post" onsubmit="return confirm('¿Seguro que deseas cancelar esta reserva?');" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash-fill me-1"></i> Cancelar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No disponible</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 0.75em;
+    }
+
+    .btn-outline-danger:hover {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+</style>

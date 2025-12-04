@@ -1,0 +1,128 @@
+﻿@model IEnumerable<PaqueteTuristico>
+@{
+    ViewData["Title"] = "Paquetes Turísticos";
+}
+
+<style>
+    /* Fondo oscuro y tipografía */
+    .paquetes-fondo {
+        background: #121212;
+        min-height: 90vh;
+        padding: 40px 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #f8f1e7;
+    }
+
+        .paquetes-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 20px;
+        }
+
+    /* Botones */
+    .btn-success, .btn-outline-primary {
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #ff7f50, #ff4500);
+        color: white;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #ff4500, #ff7f50);
+            box-shadow: 0 0 12px #ff7f50;
+        }
+
+    .btn-outline-primary {
+        color: #ff7f50;
+        border: 1px solid #ff7f50;
+    }
+
+        .btn-outline-primary:hover {
+            background: #ff7f50;
+            color: #121212;
+            box-shadow: 0 0 8px #ff7f50;
+        }
+
+    /* Tarjetas de paquetes */
+    .paquete-card {
+        background: rgba(0,0,0,0.65);
+        border-radius: 16px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255,127,80,0.25);
+        color: #f8f1e7;
+    }
+
+        .paquete-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 22px rgba(255,127,80,0.4) !important;
+        }
+
+        .paquete-card img {
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            object-fit: cover;
+            height: 180px;
+            width: 100%;
+        }
+
+    .paquete-card-body {
+        padding: 15px;
+    }
+
+        .paquete-card-body h5 {
+            color: #ff7f50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .paquete-card-body p {
+            color: #f8f1e7;
+            margin-bottom: 10px;
+        }
+
+    /* Buscador */
+    .form-control {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid #ff7f50;
+        color: #f8f1e7;
+    }
+
+        .form-control::placeholder {
+            color: #f8f1e7aa;
+        }
+</style>
+
+<div class="paquetes-fondo container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Paquetes Turísticos</h2>
+
+        <div class="d-flex">
+            <a asp-controller="Paquetes"
+               asp-action="Create"
+               class="btn btn-success me-3">
+                ➕ Crear Paquete
+            </a>
+
+            <form class="d-flex" method="get">
+                <input type="text" name="search" class="form-control me-2" placeholder="Buscar destinos o paquetes..." />
+                <button class="btn btn-outline-primary">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var paquete in Model)
+        {
+            @await Html.PartialAsync("_PaqueteCard", paquete)
+        }
+    </div>
+
+</div>
+

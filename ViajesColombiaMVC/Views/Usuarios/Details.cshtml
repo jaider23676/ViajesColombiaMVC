@@ -1,0 +1,110 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ViajesColombiaMVC.Models.Usuario
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Detalles del Cliente";
+}
+
+<h2 class="mb-4">Detalles del Cliente</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title">@Model.Nombre</h4>
+        <p><strong>Correo:</strong> @Model.Correo</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Direccion</p>
+        <p><strong>Preferencias:</strong> @(Model.Preferencias ?? "Sin preferencias registradas")</p>
+    </div>
+</div>
+
+<!-- 🔹 BOTÓN SUGERIR CONDUCTOR (solo admin) -->
+@if (Context.Session.GetInt32("RolId") == 1)
+{
+    <div class="mb-4">
+        <a class="btn btn-primary"
+           asp-controller="Asignaciones"
+           asp-action="Sugerir"
+           asp-route-id="@Model.Id">
+            <i class="bi bi-car-front-fill"></i> Sugerir Conductor
+        </a>
+    </div>
+}
+
+<!-- 🔹 HISTORIAL DE RESERVAS -->
+<h3 class="mb-3">Historial de Reservas</h3>
+
+@if (ViewBag.Reservas != null && ViewBag.Reservas.Count > 0)
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Paquete</th>
+                <th>Fecha</th>
+                <th>Cantidad</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in ViewBag.Reservas)
+            {
+                <tr>
+                    <td>@r.PaqueteId</td> <!-- Si quieres, puedo agregar el nombre del paquete -->
+                    <td>@r.FechaReserva</td>
+                    <td>@r.CantidadPersonas</td>
+                    <td>@r.Estado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">Este cliente no ha realizado reservas.</div>
+}
+
+<!-- 🔹 HISTORIAL DE ASIGNACIÓN DE CONDUCTORES -->
+<h3 class="mt-5 mb-3">Asignación de Conductores</h3>
+
+@if (ViewBag.Asignaciones != null && ViewBag.Asignaciones.Count > 0)
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Conductor</th>
+                <th>Fecha</th>
+                <th>Motivo</th>
+                <th>Activo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in ViewBag.Asignaciones)
+            {
+                <tr>
+                    <td>@a.Conductor?.Nombre</td>
+                    <td>@a.FechaAsignacion</td>
+                    <td>@a.Motivo</td>
+                    <td>
+                        @if (a.Activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactivo</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">Todavía no se han asignado conductores a este cliente.</div>
+}
+
+<!-- 🔹 BOTÓN VOLVER -->
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-4">Volver</a>

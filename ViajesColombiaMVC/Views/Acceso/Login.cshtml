@@ -1,0 +1,295 @@
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Contenedor fullscreen con animación de fondo */
+    .login-fullscreen {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: #0d1b2a;
+    }
+
+    /* Canvas para animación */
+    #particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Card */
+    .login-card {
+        position: relative;
+        z-index: 1;
+        width: 360px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 40px 35px;
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+        text-align: center;
+        animation: fadeIn 0.6s ease;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .login-title {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .login-sub {
+        color: #bcd0e8;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: #dbe4f3;
+        font-size: 14px;
+        text-align: left;
+        display: block;
+        margin-bottom: 5px;
+        margin-top: 10px;
+    }
+
+    .form-control {
+        width: 100%;
+        height: 44px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 10px;
+        color: #fff;
+        padding: 0 14px;
+        transition: 0.25s ease;
+    }
+
+        .form-control::placeholder {
+            color: #96a5b8;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: rgba(255,255,255,0.18);
+            border-color: #3fa9ff;
+            box-shadow: 0 0 10px rgba(65,141,255,0.45);
+        }
+
+    .btn-login {
+        width: 100%;
+        height: 46px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        background: linear-gradient(90deg, #006eff, #37b6ff);
+        box-shadow: 0 4px 16px rgba(50,150,255,0.4);
+        transition: 0.25s ease;
+        cursor: pointer;
+    }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, #2b89ff, #59caff);
+            box-shadow: 0 6px 22px rgba(50,150,255,0.6);
+        }
+
+    .footer-links {
+        margin-top: 18px;
+    }
+
+        .footer-links a {
+            display: block;
+            color: #78baff;
+            font-size: 14px;
+            text-decoration: none;
+            transition: 0.25s ease;
+            margin-bottom: 6px;
+        }
+
+            .footer-links a:hover {
+                color: #a7d4ff;
+                text-decoration: underline;
+            }
+
+    .alert-custom {
+        background: rgba(255,80,80,0.15);
+        border: 1px solid rgba(255,0,0,0.45);
+        padding: 12px;
+        border-radius: 10px;
+        color: #ff7c7c;
+        margin-top: 15px;
+    }
+
+    /* Botón ojo */
+    .password-wrapper {
+        position: relative;
+    }
+
+        .password-wrapper button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+</style>
+
+<div class="login-fullscreen">
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="login-card">
+
+        <div class="login-title">Iniciar Sesión</div>
+        <div class="login-sub">Accede a tu cuenta</div>
+
+        <form asp-action="Login" method="post">
+
+            <label class="form-label">Correo</label>
+            <input type="email" name="correo" class="form-control" placeholder="correo@ejemplo.com" required />
+
+            <label class="form-label">Contraseña</label>
+            <div class="password-wrapper">
+                <input type="password" name="contrasena" class="form-control" placeholder="********" id="passwordInput" required />
+                <button type="button" id="togglePassword">
+                    <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="btn-login">Ingresar</button>
+
+            <div class="footer-links">
+                <a asp-action="Registro">Crear cuenta</a>
+                <a asp-action="Recuperar">¿Olvidaste tu contraseña?</a>
+            </div>
+
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert-custom">@ViewBag.Error</div>
+        }
+
+    </div>
+</div>
+
+<script>
+    // Animación simple de partículas flotantes
+    (() => {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const particles = [];
+        const particleCount = 80;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = random(0, width);
+                this.y = random(0, height);
+                this.size = random(1, 3);
+                this.speedX = random(-0.3, 0.3);
+                this.speedY = random(-0.1, 0.1);
+                this.alpha = random(0.2, 0.7);
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = width;
+                else if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                else if (this.y > height) this.y = 0;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 176, 255, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+            animate();
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        window.addEventListener('resize', resize);
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+    })();
+
+    // Toggle contraseña
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#passwordInput');
+    const eyeIcon = document.querySelector('#eyeIcon');
+
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // Cambiar icono
+        if (type === 'text') {
+            eyeIcon.classList.remove('bi-eye-fill');
+            eyeIcon.classList.add('bi-eye-slash-fill');
+        } else {
+            eyeIcon.classList.remove('bi-eye-slash-fill');
+            eyeIcon.classList.add('bi-eye-fill');
+        }
+    });
+</script>
+

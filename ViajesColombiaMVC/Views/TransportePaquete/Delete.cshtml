@@ -1,0 +1,20 @@
+﻿@model ViajesColombiaMVC.Models.TransportePaquete
+
+@{
+    ViewData["Title"] = "Eliminar Transporte";
+}
+
+<h2 class="text-danger">¿Eliminar Transporte?</h2>
+
+<div class="alert alert-warning">
+    <p><strong>Conductor:</strong> @Model.Conductor?.Nombre</p>
+    <p><strong>Fecha:</strong> @Model.Fecha.ToString("yyyy-MM-dd")</p>
+    <p><strong>Actividad:</strong> @Model.Actividad</p>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="@Url.Action("Index", new { paqueteId = Model.PaqueteId })" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>

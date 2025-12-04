@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.FormaPago>
+
+@{
+    ViewData["Title"] = "Formas de Pago";
+}
+
+<h2 class="mb-3">Formas de Pago</h2>
+
+<a class="btn btn-primary mb-3" href="/FormasPago/Create">Nueva Forma de Pago</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Activo</th>
+            <th style="width:150px;">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Descripcion</td>
+                <td>
+                    @(item.Activo ? "Sí" : "No")
+                </td>
+                <td>
+                    <a href="/FormasPago/Edit/@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="/FormasPago/Delete/@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

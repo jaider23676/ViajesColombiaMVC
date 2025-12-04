@@ -1,0 +1,144 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Proveedor>
+
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<style>
+    .proveedores-fondo {
+        background-color: #121212;
+        min-height: 80vh;
+        padding: 40px 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #f8f1e7;
+    }
+
+        .proveedores-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 30px;
+        }
+
+    .btn-primary {
+        background-color: #ff7f50;
+        border-color: #ff7f50;
+        transition: all 0.3s ease;
+        color: #121212;
+    }
+
+        .btn-primary:hover {
+            background-color: #ffa46b;
+            border-color: #ffa46b;
+        }
+
+    .btn-warning {
+        background-color: #ffb347;
+        border-color: #ffb347;
+        color: #121212;
+    }
+
+        .btn-warning:hover {
+            background-color: #ffc77f;
+            border-color: #ffc77f;
+        }
+
+    .btn-danger {
+        background-color: #ff3b3b;
+        border-color: #ff3b3b;
+        color: #121212;
+    }
+
+        .btn-danger:hover {
+            background-color: #ff5c5c;
+            border-color: #ff5c5c;
+        }
+
+    .btn-info {
+        background-color: #1e90ff;
+        border-color: #1e90ff;
+        color: #fff;
+    }
+
+        .btn-info:hover {
+            background-color: #3aa0ff;
+            border-color: #3aa0ff;
+        }
+
+    table {
+        background: rgba(0,0,0,0.65);
+        border-radius: 12px;
+        overflow: hidden;
+        color: #f8f1e7;
+    }
+
+    thead {
+        background-color: #1f1f1f;
+        color: #ff7f50;
+    }
+
+    tbody tr {
+        background: rgba(0,0,0,0.55);
+        transition: all 0.2s ease;
+    }
+
+        tbody tr:hover {
+            background: rgba(255,127,80,0.2);
+            transform: translateY(-2px);
+        }
+
+    .alert-danger {
+        background-color: #ff3b3b;
+        color: #121212;
+        border: none;
+    }
+</style>
+
+<div class="proveedores-fondo container">
+
+    <h2 class="fw-bold">Proveedores</h2>
+
+    <a href="/Proveedores/Create" class="btn btn-primary mb-3">➕ Nuevo Proveedor</a>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Dirección</th>
+                <th>Contratos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Tipo</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Correo</td>
+                    <td>@item.Direccion</td>
+                    <td>
+                        <a href="@Url.Action("Index", "Contratos", new { proveedorId = item.Id })"
+                           class="btn btn-info btn-sm">Ver Contratos</a>
+                    </td>
+                    <td>
+                        <a href="/Proveedores/Edit/@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="/Proveedores/Delete/@item.Id" class="btn btn-danger btn-sm"
+                           onclick="return confirm('¿Eliminar este proveedor?');">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

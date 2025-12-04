@@ -1,0 +1,29 @@
+﻿@model ViajesColombiaMVC.Models.Pago
+
+@{
+    ViewData["Title"] = "Registrar Pago";
+}
+
+<h2 class="mb-4">Registrar Pago</h2>
+
+<form asp-action="Crear" method="post" class="card p-4 shadow-sm border-0">
+    <input type="hidden" asp-for="ReservaId" />
+
+    <div class="mb-3">
+        <label asp-for="FormaPagoId" class="form-label">Forma de Pago</label>
+        <select asp-for="FormaPagoId" class="form-select" asp-items="@(new SelectList(ViewBag.FormasPago, "Id", "Nombre"))">
+            <option value="">-- Selecciona --</option>
+        </select>
+        <span asp-validation-for="FormaPagoId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Monto" class="form-label">Monto</label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-check-circle"></i> Registrar Pago
+    </button>
+</form>

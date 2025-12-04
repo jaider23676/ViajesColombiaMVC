@@ -1,0 +1,49 @@
+﻿@model ViajesColombiaMVC.Models.Conductor
+
+<h3>Editar Conductor</h3>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!-- Campo oculto para el ID del Conductor -->
+    <input asp-for="ConductorId" type="hidden" />
+
+    <div class="mb-3">
+        <label>Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Licencia</label>
+        <input asp-for="Licencia" class="form-control" />
+        <span asp-validation-for="Licencia" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Zona</label>
+        <input asp-for="Zona" class="form-control" />
+        <span asp-validation-for="Zona" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Especialidad</label>
+        <input asp-for="Especialidad" class="form-control" />
+        <span asp-validation-for="Especialidad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Teléfono</label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Correo</label>
+        <input asp-for="Correo" type="email" class="form-control" />
+        <span asp-validation-for="Correo" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

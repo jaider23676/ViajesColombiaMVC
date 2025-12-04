@@ -1,0 +1,58 @@
+﻿@model ViajesColombiaMVC.Models.ViewModels.AdminDashboardViewModel
+
+<h2 class="mb-4">Panel del Administrador</h2>
+
+<div class="row text-center">
+
+    <div class="col-md-3">
+        <div class="card shadow p-3">
+            <h4>@Model.TotalUsuarios</h4>
+            <p>Usuarios Registrados</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow p-3">
+            <h4>@Model.TotalPaquetes</h4>
+            <p>Paquetes Turísticos</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow p-3">
+            <h4>@Model.TotalReservas</h4>
+            <p>Reservas Totales</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow p-3">
+            <h4>@Model.TotalConductores</h4>
+            <p>Conductores</p>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<h3>Reservas Recientes</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Paquete</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.ReservasRecientes)
+        {
+            <tr>
+                <td>@r.Usuario.Nombre</td>
+                <td>@r.Paquete.Nombre</td>
+                <td>@r.FechaReserva.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

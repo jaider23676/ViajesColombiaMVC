@@ -1,0 +1,231 @@
+﻿<!-- Views/TransportePaquete/Index.cshtml -->
+@model IEnumerable<ViajesColombiaMVC.Models.TransportePaquete>
+
+@{
+    ViewData["Title"] = "Gestión de Transporte";
+    var paqueteId = ViewBag.PaqueteId as int?;
+    var paqueteNombre = ViewBag.PaqueteNombre as string;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">
+                <i class="fas fa-truck-moving text-primary"></i> @ViewData["Title"]
+                @if (!string.IsNullOrEmpty(paqueteNombre))
+                {
+                    <span class="text-muted h5"> - @paqueteNombre</span>
+                }
+            </h2>
+        </div>
+        <div>
+            <a asp-action="Create" asp-route-paqueteId="@paqueteId" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Nuevo Transporte
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjeta de estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Transportes</h5>
+                    <h2 class="text-primary">@Model.Count()</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Conductores Activos</h5>
+                    <h2 class="text-success">@ViewBag.Conductores?.Count</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Próximos</h5>
+                    <h2 class="text-info">@Model.Count(t => t.Fecha.Date >= DateTime.Now.Date)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Hoy</h5>
+                    <h2 class="text-warning">@Model.Count(t => t.Fecha.Date == DateTime.Now.Date)</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de transportes -->
+    <div class="card shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-list"></i> Listado de Transportes
+            </h5>
+            <div>
+                <a href="@Url.Action("Calendario")" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-calendar-alt"></i> Vista Calendario
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Paquete</th>
+                                <th>Conductor</th>
+                                <th>Contacto</th>
+                                <th>Actividad</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="@(item.Fecha.Date < DateTime.Now.Date ? "table-secondary" : "")">
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <strong>@item.Fecha.ToString("dd/MM/yyyy")</strong>
+                                            <small class="text-muted">@item.Fecha.ToString("hh:mm tt")</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Paquete != null)
+                                        {
+                                            <div>
+                                                <strong>@item.Paquete.Nombre</strong>
+                                                <br />
+                                                <small class="text-muted">ID: @item.PaqueteId</small>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Conductor != null)
+                                        {
+                                            <div>
+                                                <strong>@item.Conductor.Nombre</strong>
+                                                <div class="small text-muted">
+                                                    <i class="fas fa-id-card"></i> @item.Conductor.Licencia
+                                                    <br />
+                                                    <i class="fas fa-map-marker-alt"></i> @item.Conductor.Zona
+                                                </div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Conductor != null)
+                                        {
+                                            <div>
+                                                <i class="fas fa-phone"></i> @item.Conductor.Telefono
+                                                <br />
+                                                <i class="fas fa-envelope"></i> @item.Conductor.Correo
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="actividad-truncada" title="@item.Actividad">
+                                            @(item.Actividad.Length > 50 ? item.Actividad.Substring(0, 50) + "..." : item.Actividad)
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.Id"
+                                               class="btn btn-info" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.Id"
+                                               class="btn btn-warning" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn btn-danger" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-truck fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No hay transportes registrados</h4>
+                    <p class="text-muted">Comienza asignando un transporte a un paquete turístico</p>
+                    <a asp-action="Create" asp-route-paqueteId="@paqueteId" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus-circle"></i> Crear Primer Transporte
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Botón para volver -->
+    @if (paqueteId.HasValue)
+    {
+        <div class="mt-4">
+            <a href="@Url.Action("Details", "PaqueteTuristico", new { id = paqueteId })"
+               class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Paquete
+            </a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .actividad-truncada {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: help;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-group-sm .btn {
+            border-radius: 4px !important;
+            margin: 2px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('[title]').tooltip();
+
+            // Mostrar notificaciones
+            @if (TempData["SuccessMessage"] != null)
+            {
+                    <text>
+                    toastr.success('@Html.Raw(TempData["SuccessMessage"])');
+                    </text>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                    <text>
+                    toastr.error('@Html.Raw(TempData["Error"])');
+                    </text>
+            }
+        });
+    </script>
+}

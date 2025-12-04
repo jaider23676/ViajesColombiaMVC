@@ -1,0 +1,43 @@
+﻿@model ViajesColombiaMVC.Models.PaqueteTuristico
+
+<div class="container mt-4">
+    <h2>Crear Paquete Turístico</h2>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label>Nombre</label>
+            <input asp-for="Nombre" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Descripción</label>
+            <textarea asp-for="Descripcion" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Precio</label>
+            <input asp-for="Precio" class="form-control" type="number" step="0.01" />
+        </div>
+
+        <div class="mb-3">
+            <label>Destino</label>
+            <select asp-for="DestinoId" class="form-control"
+                    asp-items="@(ViewData["Destinos"] as SelectList)">
+                <option value="">Seleccione un destino</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Cupo</label>
+            <input asp-for="Cupo" type="number" class="form-control" />
+        </div>
+
+        <!-- CAMPO PARA SUBIR LA IMAGEN -->
+        <div class="mb-3">
+            <label>Imagen del paquete</label>
+            <input asp-for="ImagenFile" type="file" class="form-control" accept="image/*" />
+        </div>
+
+        <button class="btn btn-success" type="submit">Guardar</button>
+    </form>
+</div>

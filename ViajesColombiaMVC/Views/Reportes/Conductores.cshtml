@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.ViewModels.ReporteConductoresViewModel>
+
+<h2>🚘 Reporte de Conductores</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Conductor</th>
+            <th>Viajes Asignados</th>
+            <th>Promedio Calificación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Conductor</td>
+                <td>@c.ViajesAsignados</td>
+                <td>@c.PromedioCalificacion</td>
+            </tr>
+        }
+    </tbody>
+</table>

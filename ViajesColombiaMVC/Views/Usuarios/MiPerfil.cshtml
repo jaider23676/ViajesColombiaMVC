@@ -1,0 +1,155 @@
+﻿@model ViajesColombiaMVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<style>
+    /* Fondo oscuro para la sección */
+    .perfil-fondo {
+        background: #121212;
+        min-height: 90vh;
+        padding: 40px 20px;
+        color: #f8f1e7;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Tarjeta del perfil */
+    .perfil-card {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
+        color: #f8f1e7;
+        transition: all 0.3s ease;
+    }
+
+        .perfil-card:hover {
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.5);
+            transform: translateY(-4px);
+        }
+
+        /* Icono de usuario */
+        .perfil-card .bi-person-circle {
+            font-size: 80px;
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            transition: 0.3s;
+        }
+
+            .perfil-card .bi-person-circle:hover {
+                color: #ffa64d;
+                text-shadow: 0 0 15px #ff7f50;
+            }
+
+    h2, h4, h5 {
+        color: #ff7f50;
+    }
+
+    p strong {
+        color: #ffd9b3;
+    }
+
+    /* Botones */
+    .btn-primary {
+        background: linear-gradient(45deg, #ff7f50, #ff4500);
+        border: none;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff4500, #ff7f50);
+            box-shadow: 0 0 10px #ff7f50;
+        }
+
+    .btn-outline-secondary {
+        border-color: #ff7f50;
+        color: #ff7f50;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background: #ff7f50;
+            color: #121212;
+            box-shadow: 0 0 10px #ff7f50;
+        }
+</style>
+
+<div class="perfil-fondo">
+
+    <div class="container mt-4">
+        <h2 class="fw-bold mb-4">
+            <i class="bi bi-person-badge"></i> Mi Perfil
+        </h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+
+                <div class="perfil-card">
+
+                    <div class="text-center mb-3">
+                        <i class="bi bi-person-circle"></i>
+                        <h4 class="fw-bold mt-2">@Model.Nombre</h4>
+                        <p class="text-muted m-0">@Model.Correo</p>
+                    </div>
+
+                    <hr style="border-color: rgba(255,140,0,0.3);" />
+
+                    <h5 class="fw-semibold">Información Personal</h5>
+
+                    <p class="mt-3">
+                        <strong>Nombre Completo:</strong><br />
+                        @Model.Nombre
+                    </p>
+
+                    <p>
+                        <strong>Correo Electrónico:</strong><br />
+                        @Model.Correo
+                    </p>
+
+                    <p>
+                        <strong>Teléfono:</strong><br />
+                        @(Model.Telefono ?? "No registrado")
+                    </p>
+
+                    <p>
+                        <strong>Dirección:</strong><br />
+                        @(Model.Direccion ?? "No registrada")
+                    </p>
+
+                    <p>
+                        <strong>Rol de Usuario:</strong><br />
+                        @Model.Rol?.Nombre
+                    </p>
+
+                    <p>
+                        <strong>Fecha de Registro:</strong><br />
+                        @Model.FechaRegistro.ToString("dd/MM/yyyy")
+                    </p>
+
+                    <p>
+                        <strong>Estado:</strong><br />
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </p>
+
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a asp-controller="Usuarios" asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-primary px-4">
+                            <i class="bi bi-pencil-square"></i> Editar Perfil
+                        </a>
+
+                        <a asp-controller="Usuarios" asp-action="CambiarPassword" asp-route-id="@Model.Id"
+                           class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@model ViajesColombiaMVC.Models.PaqueteTuristico
+
+<div class="container mt-4">
+    <h2>Eliminar Paquete Turístico</h2>
+
+    <h4>¿Está seguro que desea eliminar este paquete?</h4>
+
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <p>@Model.Nombre</p>
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción:</label>
+        <p>@Model.Descripcion</p>
+    </div>
+
+    <div class="mb-3">
+        <label>Precio:</label>
+        <p>@Model.Precio.ToString("C")</p>
+    </div>
+
+    <div class="mb-3">
+        <label>Destino:</label>
+        <p>@Model.Destino?.Nombre</p> <!-- Asegúrate de que Destino esté incluido -->
+    </div>
+
+    <div class="mb-3">
+        <label>Cupo:</label>
+        <p>@Model.Cupo</p>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

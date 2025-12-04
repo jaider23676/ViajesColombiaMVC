@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Pago>
+
+@{
+    ViewData["Title"] = "Mis Pagos";
+}
+
+<h2 class="mb-4">Mis Pagos</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No tienes pagos registrados.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Paquete</th>
+                <th>Forma de Pago</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Comprobantes</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pago in Model)
+            {
+                <tr>
+                    <td>@pago.Reserva.Paquete.Nombre</td>
+                    <td>@pago.FormaPago?.Nombre</td>
+                    <td>@pago.Monto.ToString("C")</td>
+                    <td>@pago.FechaPago.ToShortDateString()</td>
+                    <td>
+                        @if (pago.Estado == "Pendiente")
+                        {
+                            <span class="badge bg-warning">Pendiente</span>
+                        }
+                        else if (pago.Estado == "Completado")
+                        {
+                            <span class="badge bg-success">Completado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Fallido</span>
+                        }
+                    </td>
+                    <td>
+                        @if (pago.Comprobantes.Any())
+                        {
+                            <a asp-action="VerComprobantes" asp-route-pagoId="@pago.Id" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Sin comprobante</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="SubirComprobante" asp-route-pagoId="@pago.Id" class="btn btn-sm btn-success">
+                            <i class="bi bi-upload"></i> Subir
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

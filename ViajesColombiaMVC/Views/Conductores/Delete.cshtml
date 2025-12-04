@@ -1,0 +1,36 @@
+﻿@model ViajesColombiaMVC.Models.Conductor
+
+<h3>Eliminar Conductor</h3>
+
+<h5>¿Está seguro de que desea eliminar este conductor?</h5>
+
+<div class="card mb-3 p-3">
+    <dl class="row">
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Licencia</dt>
+        <dd class="col-sm-9">@Model.Licencia</dd>
+
+        <dt class="col-sm-3">Zona</dt>
+        <dd class="col-sm-9">@Model.Zona</dd>
+
+        <dt class="col-sm-3">Especialidad</dt>
+        <dd class="col-sm-9">@Model.Especialidad</dd>
+
+        <dt class="col-sm-3">Teléfono</dt>
+        <dd class="col-sm-9">@Model.Telefono</dd>
+
+        <dt class="col-sm-3">Correo</dt>
+        <dd class="col-sm-9">@Model.Correo</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <!-- Input oculto con el ID del conductor -->
+    <input type="hidden" asp-for="ConductorId" />
+
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+

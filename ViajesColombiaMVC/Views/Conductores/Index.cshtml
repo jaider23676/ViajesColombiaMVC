@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Conductor>
+
+@{
+    ViewData["Title"] = "Conductores";
+}
+
+<style>
+    .conductores-fondo {
+        background-color: #121212;
+        min-height: 80vh;
+        padding: 40px 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #f8f1e7;
+    }
+
+        .conductores-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 30px;
+        }
+
+    .btn-primary {
+        background-color: #ff7f50;
+        border-color: #ff7f50;
+        color: #121212;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #ffa46b;
+            border-color: #ffa46b;
+        }
+
+    .btn-warning {
+        background-color: #ffb347;
+        border-color: #ffb347;
+        color: #121212;
+    }
+
+        .btn-warning:hover {
+            background-color: #ffc77f;
+            border-color: #ffc77f;
+        }
+
+    .btn-danger {
+        background-color: #ff3b3b;
+        border-color: #ff3b3b;
+        color: #121212;
+    }
+
+        .btn-danger:hover {
+            background-color: #ff5c5c;
+            border-color: #ff5c5c;
+        }
+
+    .btn-info {
+        background-color: #1e90ff;
+        border-color: #1e90ff;
+        color: #fff;
+    }
+
+        .btn-info:hover {
+            background-color: #3aa0ff;
+            border-color: #3aa0ff;
+        }
+
+    table {
+        background: rgba(0,0,0,0.65);
+        border-radius: 12px;
+        overflow: hidden;
+        color: #f8f1e7;
+    }
+
+    thead {
+        background-color: #1f1f1f;
+        color: #ff7f50;
+    }
+
+    tbody tr {
+        background: rgba(0,0,0,0.55);
+        transition: all 0.2s ease;
+    }
+
+        tbody tr:hover {
+            background: rgba(255,127,80,0.2);
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="conductores-fondo container">
+
+    <h2 class="fw-bold">Conductores</h2>
+
+    <a href="@Url.Action("Create")" class="btn btn-primary mb-3">➕ Agregar Conductor</a>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Licencia</th>
+                <th>Zona</th>
+                <th>Especialidad</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.Licencia</td>
+                    <td>@item.Zona</td>
+                    <td>@item.Especialidad</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Correo</td>
+                    <td>
+                        <a href="@Url.Action("Edit", new { id = item.ConductorId })" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="@Url.Action("Details", new { id = item.ConductorId })" class="btn btn-info btn-sm">Detalles</a>
+                        <a href="@Url.Action("Delete", new { id = item.ConductorId })" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

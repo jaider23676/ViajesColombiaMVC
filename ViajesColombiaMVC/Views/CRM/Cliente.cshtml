@@ -1,0 +1,214 @@
+﻿@model ViajesColombiaMVC.Models.Usuario
+@{
+    ViewData["Title"] = "Perfil del Cliente";
+}
+
+<style>
+    .perfil-fondo {
+        background-color: #121212;
+        color: #f8f1e7;
+        font-family: 'Poppins', sans-serif;
+        min-height: 90vh;
+        padding: 30px 20px;
+    }
+
+    h2 {
+        color: #ff7f50;
+        text-shadow: 0 0 8px #ff7f50;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: rgba(0,0,0,0.65);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        color: #f8f1e7;
+    }
+
+    .card-header {
+        font-weight: 600;
+    }
+
+    .bg-primary {
+        background-color: #ff7f50 !important;
+        color: #121212 !important;
+    }
+
+    .bg-success {
+        background-color: #ffa466 !important;
+        color: #121212 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc266 !important;
+        color: #121212 !important;
+    }
+
+    .btn-primary {
+        background-color: #ff7f50;
+        border-color: #ff7f50;
+        color: #121212;
+    }
+
+        .btn-primary:hover {
+            background-color: #ffa466;
+            border-color: #ffa466;
+        }
+
+    table {
+        color: #f8f1e7;
+    }
+
+    .table-dark th {
+        background-color: #333 !important;
+        color: #f8f1e7 !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255,127,80,0.2);
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .text-muted {
+        color: #aaaaaa !important;
+    }
+</style>
+
+<div class="perfil-fondo container">
+
+    <h2>
+        <i class="bi bi-person-circle"></i> Cliente: @Model.Nombre
+    </h2>
+
+    <div class="row">
+
+        <!-- PANEL INFO PERSONAL -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-header">
+                    <i class="bi bi-info-circle"></i> Información del Cliente
+                </div>
+                <div class="card-body">
+                    <p><strong>Correo:</strong> @Model.Correo</p>
+                    <p><strong>Teléfono:</strong> @(Model.Telefono ?? "No registrado")</p>
+                    <p><strong>Dirección:</strong> @(Model.Direccion ?? "No registrada")</p>
+                    <p><strong>Preferencias:</strong> @(Model.Preferencias ?? "No registradas")</p>
+                    <p><strong>Registrado:</strong> @Model.FechaRegistro.ToString("yyyy-MM-dd")</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL RESERVAS -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success">
+                    <i class="bi bi-suitcase"></i> Reservas del Cliente
+                </div>
+                <div class="card-body">
+
+                    @if (Model.Reservas == null || !Model.Reservas.Any())
+                    {
+                        <p class="text-muted">No tiene reservas registradas.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Paquete</th>
+                                    <th>Personas</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var r in Model.Reservas)
+                                {
+                                    <tr>
+                                        <td>@r.Paquete.Nombre</td>
+                                        <td>@r.CantidadPersonas</td>
+                                        <td>@r.FechaReserva.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <span class="badge bg-info">@r.Estado</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL CONDUCTORES ASIGNADOS -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="card shadow-lg mb-4">
+                <div class="card-header bg-warning">
+                    <i class="bi bi-car-front"></i> Conductores Asignados
+                </div>
+
+                <div class="card-body">
+
+                    <a class="btn btn-primary mb-3" href="/CRM/AsignarConductor?usuarioId=@Model.Id">
+                        <i class="bi bi-plus-circle"></i> Asignar Conductor
+                    </a>
+
+                    @if (Model.Asignaciones == null || !Model.Asignaciones.Any())
+                    {
+                        <p class="text-muted">No tiene conductores asignados.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-hover">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Conductor</th>
+                                    <th>Teléfono</th>
+                                    <th>Especialidad</th>
+                                    <th>Fecha Asignación</th>
+                                    <th>Activo</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var a in Model.Asignaciones)
+                                {
+                                    <tr>
+                                        <td>@a.Conductor.Nombre</td>
+                                        <td>@a.Conductor.Telefono</td>
+                                        <td>@a.Conductor.Especialidad</td>
+                                        <td>@a.FechaAsignacion.ToShortDateString()</td>
+                                        <td>
+                                            @if (a.Activo)
+                                            {
+                                                <span class="badge bg-success">Sí</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">No</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="/CRM/Calificar?conductorId=@a.ConductorId&usuarioId=@Model.Id"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-star"></i> Calificar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

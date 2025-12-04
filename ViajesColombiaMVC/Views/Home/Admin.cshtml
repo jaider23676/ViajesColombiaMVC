@@ -1,0 +1,477 @@
+﻿@{
+    ViewData["Title"] = "Panel del Administrador";
+}
+
+<!-- ESTILOS SOLO PARA ESTA VISTA -->
+<style>
+    :root {
+        --admin-primary: #ff7f50;
+        --admin-secondary: #ff4500;
+        --admin-accent: #00b0ff;
+        --admin-success: #28a745;
+        --admin-dark: #121212;
+        --admin-light: #f8f1e7;
+        --admin-card-bg: rgba(30, 30, 30, 0.85);
+        --admin-hover-bg: rgba(255, 140, 0, 0.15);
+    }
+
+    .admin-fondo {
+        background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.9)), url('/images/fondo1.png') no-repeat center center fixed;
+        background-size: cover;
+        padding: 40px 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin-container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .admin-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 0 20px;
+    }
+
+    .admin-title {
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 20px rgba(255, 140, 0, 0.3);
+        letter-spacing: -0.5px;
+    }
+
+    .admin-subtitle {
+        font-size: 1.1rem;
+        color: var(--admin-light);
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .admin-overlay {
+        background: rgba(18, 18, 18, 0.92);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 50px 40px;
+        border: 1px solid rgba(255, 140, 0, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 140, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .admin-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--admin-primary), transparent);
+        }
+
+    .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 20px 0;
+    }
+
+    .admin-card {
+        background: var(--admin-card-bg);
+        border-radius: 18px;
+        padding: 35px 25px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--admin-light);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+    }
+
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.05), rgba(255, 69, 0, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 140, 0, 0.4);
+            box-shadow: 0 15px 35px rgba(255, 140, 0, 0.25), 0 0 0 1px rgba(255, 140, 0, 0.3);
+        }
+
+            .admin-card:hover::before {
+                opacity: 1;
+            }
+
+    .admin-card-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(255, 69, 0, 0.15));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+
+    .admin-card:hover .admin-card-icon {
+        background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
+    }
+
+    .admin-card i {
+        font-size: 2.2rem;
+        color: var(--admin-primary);
+        transition: all 0.4s ease;
+    }
+
+    .admin-card:hover i {
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .admin-card h5 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--admin-light);
+        position: relative;
+        z-index: 1;
+        transition: color 0.3s ease;
+    }
+
+    .admin-card:hover h5 {
+        color: var(--admin-primary);
+    }
+
+    .admin-card-desc {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+        margin-top: 10px;
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease 0.1s;
+    }
+
+    .admin-card:hover .admin-card-desc {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Tarjeta especial para Reportes */
+    .admin-card-blue {
+        border-color: rgba(0, 176, 255, 0.2);
+    }
+
+        .admin-card-blue .admin-card-icon {
+            background: linear-gradient(135deg, rgba(0, 176, 255, 0.15), rgba(0, 153, 255, 0.15));
+        }
+
+        .admin-card-blue:hover {
+            border-color: rgba(0, 176, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 176, 255, 0.25), 0 0 0 1px rgba(0, 176, 255, 0.3);
+        }
+
+            .admin-card-blue:hover .admin-card-icon {
+                background: linear-gradient(135deg, #00b0ff, #0099ff);
+            }
+
+        .admin-card-blue i {
+            color: #00b0ff;
+        }
+
+        .admin-card-blue:hover h5 {
+            color: #00b0ff;
+        }
+
+    /* Tarjeta especial para Configuración */
+    .admin-card-green {
+        border-color: rgba(40, 167, 69, 0.2);
+    }
+
+        .admin-card-green .admin-card-icon {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(33, 136, 56, 0.15));
+        }
+
+        .admin-card-green:hover {
+            border-color: rgba(40, 167, 69, 0.4);
+            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.25), 0 0 0 1px rgba(40, 167, 69, 0.3);
+        }
+
+            .admin-card-green:hover .admin-card-icon {
+                background: linear-gradient(135deg, #28a745, #218838);
+            }
+
+        .admin-card-green i {
+            color: #28a745;
+        }
+
+        .admin-card-green:hover h5 {
+            color: #28a745;
+        }
+
+    /* Badge de nuevo */
+    .new-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #00b0ff, #0099ff);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        animation: pulse 2s infinite;
+    }
+
+    /* Animaciones */
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 176, 255, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(0, 176, 255, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 176, 255, 0);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .admin-card {
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+    }
+
+        .admin-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .admin-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .admin-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .admin-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .admin-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .admin-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .admin-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .admin-title {
+            font-size: 2.5rem;
+        }
+
+        .admin-overlay {
+            padding: 30px 20px;
+        }
+
+        .admin-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .admin-card {
+            min-height: 180px;
+            padding: 25px 20px;
+        }
+    }
+
+    /* Efecto glow al hover */
+    .admin-card::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, var(--admin-primary), var(--admin-secondary), transparent);
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .admin-card:hover::after {
+        opacity: 1;
+    }
+
+    .admin-card-blue::after {
+        background: linear-gradient(45deg, #00b0ff, #0099ff, transparent);
+    }
+
+    .admin-card-green::after {
+        background: linear-gradient(45deg, #28a745, #218838, transparent);
+    }
+</style>
+
+<!-- CONTENIDO DEL ADMIN -->
+<div class="admin-fondo">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Panel del Administrador</h1>
+            <p class="admin-subtitle">Gestiona todos los aspectos de Viajes Colombia desde un solo lugar</p>
+        </div>
+
+        <div class="admin-overlay">
+            <div class="admin-grid">
+                <!-- Gestión de Usuarios -->
+                <a href="/Usuario/Index" class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h5>Gestión de Usuarios</h5>
+                    <p class="admin-card-desc">Administra usuarios, permisos y accesos al sistema</p>
+                </a>
+
+                <!-- Paquetes Turísticos -->
+                <a href="/PaquetesTuristicos/Index" class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-map-fill"></i>
+                    </div>
+                    <h5>Paquetes Turísticos</h5>
+                    <p class="admin-card-desc">Crea, edita y gestiona ofertas turísticas</p>
+                </a>
+
+                <!-- Reservas -->
+                <a href="/Reservas/Index" class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <h5>Gestión de Reservas</h5>
+                    <p class="admin-card-desc">Controla todas las reservas y confirmaciones</p>
+                </a>
+
+                <!-- Roles -->
+                <a href="/Roles/Index" class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <h5>Administración de Roles</h5>
+                    <p class="admin-card-desc">Configura roles y niveles de acceso</p>
+                </a>
+
+                <!-- Permisos -->
+                <a href="/Permiso/Index" class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h5>Control de Permisos</h5>
+                    <p class="admin-card-desc">Gestiona permisos y seguridad del sistema</p>
+                </a>
+
+                <!-- Reportes -->
+                <a href="/Reportes/Index" class="admin-card admin-card-blue">
+                    <div class="new-badge">NUEVO</div>
+                    <div class="admin-card-icon">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                    </div>
+                    <h5>Reportes y Analytics</h5>
+                    <p class="admin-card-desc">Métricas, estadísticas y análisis de datos</p>
+                </a>
+
+                <!-- Configuración -->
+                <a href="/Configuracion/Index" class="admin-card admin-card-green">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-gear-fill"></i>
+                    </div>
+                    <h5>Configuración del Sistema</h5>
+                    <p class="admin-card-desc">Ajustes generales y preferencias de la aplicación</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script simplificado solo para efectos visuales -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Efecto hover mejorado
+        const cards = document.querySelectorAll('.admin-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.admin-card-icon');
+                icon.style.transform = 'scale(1.15) rotate(5deg)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.admin-card-icon');
+                icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Añadir tooltips
+        cards.forEach(card => {
+            card.setAttribute('data-bs-toggle', 'tooltip');
+            card.setAttribute('data-bs-placement', 'top');
+            card.setAttribute('title', 'Haz clic para acceder');
+        });
+
+        // Inicializar tooltips de Bootstrap si está disponible
+        if (typeof bootstrap !== 'undefined') {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    });
+</script>

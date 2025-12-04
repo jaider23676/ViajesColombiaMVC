@@ -1,0 +1,143 @@
+﻿@model ViajesColombiaMVC.Models.Reserva
+
+@{
+    ViewData["Title"] = "Crear Reserva";
+    var rolId = Context.Session.GetInt32("RolId");
+    var usuarios = ViewData["Usuarios"] as List<ViajesColombiaMVC.Models.Usuario>;
+    var paquetes = ViewData["Paquetes"] as List<ViajesColombiaMVC.Models.PaqueteTuristico>;
+    var formasPago = ViewData["FormasPago"] as List<ViajesColombiaMVC.Models.FormaPago>;
+}
+
+<style>
+    .reserva-fondo {
+        background-color: #121212;
+        min-height: 85vh;
+        padding: 40px 20px;
+        color: #f8f1e7;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h2 {
+        color: #ff7f50;
+        text-shadow: 0 0 8px #ff7f50;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: rgba(0,0,0,0.65);
+        border-radius: 16px;
+        color: #f8f1e7;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #ffa466;
+    }
+
+    .form-control, .form-select {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid #ff7f50;
+        color: #f8f1e7;
+    }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.15);
+            color: #f8f1e7;
+            border-color: #ffa466;
+            box-shadow: 0 0 8px #ff7f50;
+        }
+
+    .btn-primary {
+        background-color: #ff7f50;
+        border-color: #ff7f50;
+        color: #121212;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #ffa466;
+            border-color: #ffa466;
+        }
+
+    .btn-secondary {
+        background-color: #555555;
+        border-color: #555555;
+        color: #f8f1e7;
+    }
+
+        .btn-secondary:hover {
+            background-color: #777777;
+            border-color: #777777;
+        }
+
+    .text-danger {
+        color: #ff6b6b !important;
+    }
+</style>
+
+<div class="reserva-fondo container">
+
+    <h2 class="fw-bold">Crear Reserva</h2>
+
+    <form asp-controller="Reservas" asp-action="Create" method="post" class="card">
+        @Html.AntiForgeryToken()
+
+        @* ADMIN VE EL SELECT DE USUARIO *@
+        @if (rolId == 1)
+        {
+            <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <select asp-for="UsuarioId" class="form-select" required>
+                    <option value="">Seleccione...</option>
+                    @foreach (var u in usuarios)
+                    {
+                        <option value="@u.Id">@u.Nombre (@u.Correo)</option>
+                    }
+                </select>
+                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+            </div>
+        }
+
+        @* PAQUETE TURÍSTICO *@
+        <div class="mb-3">
+            <label class="form-label">Paquete Turístico</label>
+            <select asp-for="PaqueteId" class="form-select" required>
+                <option value="">Seleccione...</option>
+                @foreach (var p in paquetes)
+                {
+                    <option value="@p.Id" data-precio="@p.Precio">@p.Nombre — $@p.Precio</option>
+                }
+            </select>
+            <span asp-validation-for="PaqueteId" class="text-danger"></span>
+        </div>
+
+        @* CANTIDAD DE PERSONAS *@
+        <div class="mb-3">
+            <label class="form-label">Cantidad de Personas</label>
+            <input asp-for="CantidadPersonas" type="number" min="1" class="form-control" required />
+            <span asp-validation-for="CantidadPersonas" class="text-danger"></span>
+        </div>
+
+        @* SELECCIÓN DE FORMA DE PAGO *@
+        <div class="mb-3">
+            <label class="form-label">Forma de Pago</label>
+            <select name="FormaPagoId" class="form-select" required>
+                <option value="">-- Seleccione --</option>
+                @foreach (var f in formasPago)
+                {
+                    <option value="@f.Id">@f.Nombre</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-4">Guardar Reserva</button>
+        <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Cancelar</a>
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Reportes";
+}
+
+<style>
+    .reportes-fondo {
+        background: #121212;
+        min-height: 80vh;
+        padding: 40px 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #f8f1e7;
+    }
+
+        .reportes-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 30px;
+        }
+
+    .list-group-item {
+        background: rgba(0,0,0,0.65);
+        color: #f8f1e7;
+        border: 1px solid #ff7f50;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .list-group-item:hover {
+            background: #ff7f50;
+            color: #121212;
+            box-shadow: 0 0 12px #ff7f50;
+            transform: translateY(-3px);
+        }
+
+        .list-group-item i {
+            margin-right: 8px;
+        }
+</style>
+
+<div class="reportes-fondo container">
+    <h2 class="fw-bold">📊 Dashboard de Reportes</h2>
+
+    <div class="list-group">
+        <a href="/Reportes/Reservas" class="list-group-item list-group-item-action">📅 Reporte de Reservas</a>
+        <a href="/Reportes/Ventas" class="list-group-item list-group-item-action">💵 Reporte de Ventas</a>
+        <a href="/Reportes/Conductores" class="list-group-item list-group-item-action">🚘 Reporte de Conductores</a>
+        <a href="/Reportes/Clientes" class="list-group-item list-group-item-action">👥 Reporte de Clientes</a>
+    </div>
+</div>

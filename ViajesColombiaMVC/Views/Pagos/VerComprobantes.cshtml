@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Comprobante>
+
+@{
+    ViewData["Title"] = "Comprobantes";
+}
+
+<h2 class="mb-4">Comprobantes del Pago</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No hay comprobantes registrados.
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var c in Model)
+        {
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-earmark-arrow-up-fill fs-1 text-primary"></i>
+                        <p class="mt-2">@c.Archivo</p>
+                        <a href="~/uploads/@c.Archivo" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i> Ver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

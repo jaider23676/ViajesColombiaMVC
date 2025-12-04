@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Conductor>
+
+@{
+    var usuario = ViewBag.Usuario;
+}
+
+<h2>Conductores sugeridos para @usuario.Nombre</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No hay conductores sugeridos para este usuario.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Zona</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Nombre</td>
+                    <td>@c.Especialidad</td>
+                    <td>@c.Zona</td>
+                    <td>
+                        <form asp-action="Asignar" method="post">
+                            <!-- Ajusta los nombres de las propiedades según tu modelo -->
+                            <input type="hidden" name="usuarioId" value="@usuario.Id" />
+                            <input type="hidden" name="conductorId" value="@c.ConductorId" />
+                            <button class="btn btn-primary btn-sm">Asignar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

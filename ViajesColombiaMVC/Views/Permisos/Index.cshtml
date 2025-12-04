@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Permiso>
+
+<style>
+    /* Fondo oscuro para la sección */
+    .permisos-fondo {
+        background: #121212;
+        min-height: 90vh;
+        padding: 40px 20px;
+        color: #f8f1e7;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        /* Título */
+        .permisos-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 20px;
+        }
+
+    /* Tabla personalizada */
+    .permisos-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(255,140,0,0.3);
+    }
+
+        .permisos-table th {
+            background: rgba(255,127,80,0.85);
+            color: #121212;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .permisos-table td {
+            text-align: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,140,0,0.3);
+            color: #f8f1e7;
+        }
+
+        .permisos-table tr:hover td {
+            background: rgba(255,140,0,0.15);
+        }
+
+    /* Botones */
+    .btn-primary, .btn-nuevo {
+        background: linear-gradient(45deg, #ff7f50, #ff4500);
+        border: none;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover, .btn-nuevo:hover {
+            background: linear-gradient(45deg, #ff4500, #ff7f50);
+            box-shadow: 0 0 12px #ff7f50;
+        }
+
+    .btn-warning {
+        background: #ff7f50;
+        border: none;
+        color: #121212;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-warning:hover {
+            background: #ff4500;
+            color: white;
+            box-shadow: 0 0 8px #ff7f50;
+        }
+
+    .btn-danger {
+        background: #ff3b3b;
+        border: none;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-danger:hover {
+            background: #ff1a1a;
+            box-shadow: 0 0 8px #ff7f50;
+        }
+</style>
+
+<div class="permisos-fondo container mt-4">
+    <h2>Gestión de Permisos</h2>
+    <a href="/Permiso/Crear" class="btn btn-nuevo mb-3">➕ Nuevo Permiso</a>
+
+    <table class="permisos-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var permiso in Model)
+            {
+                <tr>
+                    <td>@permiso.Id</td>
+                    <td>@permiso.Nombre</td>
+                    <td>@permiso.Descripcion</td>
+                    <td>
+                        <a href="/Permiso/Editar/@permiso.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="/Permiso/Eliminar/@permiso.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

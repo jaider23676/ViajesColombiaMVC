@@ -1,0 +1,38 @@
+﻿@model ViajesColombiaMVC.Models.Destino
+
+@{
+    ViewData["Title"] = "Eliminar Destino";
+}
+
+<h2>Eliminar Destino</h2>
+
+<div class="alert alert-danger">
+    <p>¿Estás seguro de que deseas eliminar este destino?</p>
+</div>
+
+<div class="mb-3">
+    <strong>Nombre:</strong> @Model.Nombre
+</div>
+<div class="mb-3">
+    <strong>Descripción:</strong> @Model.Descripcion
+</div>
+<div class="mb-3">
+    <strong>Ubicación:</strong> @Model.Ubicacion
+</div>
+<div class="mb-3">
+    <strong>Imagen:</strong><br />
+    @if (!string.IsNullOrEmpty(Model.Imagen))
+    {
+        <img src="~/images/@Model.Imagen" alt="@Model.Nombre" style="width:150px;" />
+    }
+    else
+    {
+        <span class="text-muted">Sin imagen</span>
+    }
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

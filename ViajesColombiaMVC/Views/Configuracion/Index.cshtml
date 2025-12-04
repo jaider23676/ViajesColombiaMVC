@@ -1,0 +1,169 @@
+﻿@model ViajesColombiaMVC.Configuraciones.ViajesColombiaConfig
+@{
+    ViewData["Title"] = "Configuración del Sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h1 class="text-warning mb-4">
+        <i class="bi bi-gear-fill me-2"></i>Configuración del Sistema
+    </h1>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- EMPRESA -->
+    <div class="card bg-dark text-light mb-3">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-building me-2"></i>Información de la Empresa
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <strong>Nombre:</strong> @Model.Empresa.Nombre
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong>Slogan:</strong> @Model.Empresa.Slogan
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong>Email:</strong> @Model.Empresa.Email
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong>Teléfono:</strong> @Model.Empresa.Telefono
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong>Moneda:</strong> @Model.Empresa.Moneda
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESERVAS -->
+    <div class="card bg-dark text-light mb-3">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-calendar-check me-2"></i>Configuración de Reservas
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <strong>Anticipación Mínima:</strong> @Model.Reservas.AnticipacionMinimaHoras horas
+                </div>
+                <div class="col-md-4 mb-2">
+                    <strong>Cancelación Gratuita:</strong>
+                    @if (Model.Reservas.CancelacionGratuita)
+                    {
+                        <span class="badge bg-success">Sí</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">No</span>
+                    }
+                </div>
+                <div class="col-md-4 mb-2">
+                    <strong>Límite por Usuario:</strong> @Model.Reservas.LimiteReservasPorUsuario
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGOS -->
+    <div class="card bg-dark text-light mb-3">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-currency-dollar me-2"></i>Configuración de Pagos
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <strong>% Depósito:</strong> @Model.Pagos.PorcentajeDeposito%
+                </div>
+                <div class="col-md-4 mb-2">
+                    <strong>Días Pago Completo:</strong> @Model.Pagos.DiasPagoCompleto días
+                </div>
+                <div class="col-md-4 mb-2">
+                    <strong>IVA:</strong> @Model.Pagos.Iva%
+                </div>
+                <div class="col-md-12 mb-2">
+                    <strong>Métodos de Pago:</strong> @Model.Pagos.MetodosPago
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIONES -->
+    <div class="card bg-dark text-light mb-3">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-bell me-2"></i>Configuración de Notificaciones
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <strong>Email Reservas:</strong>
+                    @if (Model.Notificaciones.EmailReservas)
+                    {
+                        <span class="badge bg-success">Activado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Desactivado</span>
+                    }
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>Email Marketing:</strong>
+                    @if (Model.Notificaciones.EmailMarketing)
+                    {
+                        <span class="badge bg-success">Activado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Desactivado</span>
+                    }
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>WhatsApp:</strong>
+                    @if (Model.Notificaciones.Whatsapp)
+                    {
+                        <span class="badge bg-success">Activado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Desactivado</span>
+                    }
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>Push:</strong>
+                    @if (Model.Notificaciones.Push)
+                    {
+                        <span class="badge bg-success">Activado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Desactivado</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            Esta configuración se lee desde appsettings.json. Para editar, modifica el archivo de configuración.
+        </p>
+        <a asp-controller="Home" asp-action="Admin" class="btn btn-warning">
+            <i class="bi bi-arrow-left me-1"></i>Volver al Panel
+        </a>
+    </div>
+</div>

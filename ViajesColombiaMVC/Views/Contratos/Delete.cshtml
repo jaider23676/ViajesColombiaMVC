@@ -1,0 +1,28 @@
+﻿@model ViajesColombiaMVC.Models.Contrato
+
+<h2 class="text-danger">Eliminar Contrato</h2>
+
+<div class="alert alert-warning">
+    <strong>¿Seguro que deseas eliminar este contrato?</strong>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+
+    <dl class="row">
+        <dt class="col-sm-3">Fecha Inicio:</dt>
+        <dd class="col-sm-9">@Model.FechaInicio.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">Fecha Fin:</dt>
+        <dd class="col-sm-9">@Model.FechaFin.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+
+        <dt class="col-sm-3">Valor:</dt>
+        <dd class="col-sm-9">$ @Model.Valor.ToString("N2")</dd>
+    </dl>
+
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" asp-route-proveedorId="@Model.ProveedorId" class="btn btn-secondary">Cancelar</a>
+</form>

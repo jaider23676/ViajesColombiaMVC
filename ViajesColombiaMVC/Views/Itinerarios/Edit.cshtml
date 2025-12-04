@@ -1,0 +1,45 @@
+﻿@model ViajesColombiaMVC.Models.Itinerario
+
+@{
+    ViewData["Title"] = "Editar Itinerario";
+}
+
+<div class="container mt-4">
+    <h2>✏️ Editar Itinerario</h2>
+    <hr />
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="PaqueteId" />
+
+        <div class="mb-3">
+            <label class="form-label">Día</label>
+            <input asp-for="Dia" type="number" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input asp-for="Titulo" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Hora Inicio</label>
+                <input asp-for="HoraInicio" type="time" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Hora Fin</label>
+                <input asp-for="HoraFin" type="time" class="form-control" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="/Itinerarios?paqueteId=@Model.PaqueteId" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

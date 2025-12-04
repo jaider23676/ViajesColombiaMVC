@@ -1,0 +1,55 @@
+﻿@model ViajesColombiaMVC.Models.Reserva
+
+@{
+    ViewData["Title"] = "Editar Reserva";
+
+    var paquetes = ViewData["Paquetes"] as List<ViajesColombiaMVC.Models.PaqueteTuristico>;
+    var estados = new List<string> { "Pendiente", "Confirmada", "Cancelada" };
+}
+
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <h2 class="text-primary fw-bold mb-4">Editar Reserva</h2>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cliente</label>
+                <input class="form-control" value="@Model.Usuario.Nombre (@Model.Usuario.Correo)" disabled />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Paquete Turístico</label>
+                <select asp-for="PaqueteId" class="form-select" required>
+                    @foreach (var p in paquetes)
+                    {
+                        <option value="@p.Id" selected="@(p.Id == Model.PaqueteId)">
+                            @p.Nombre — $@p.Precio
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cantidad de Personas</label>
+                <input asp-for="CantidadPersonas" type="number" class="form-control" min="1" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Estado</label>
+                <select asp-for="Estado" class="form-select">
+                    @foreach (var estado in estados)
+                    {
+                        <option value="@estado" selected="@(estado == Model.Estado)">
+                            @estado
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>

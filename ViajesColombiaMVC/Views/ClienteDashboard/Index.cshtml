@@ -1,0 +1,44 @@
+﻿@model ViajesColombiaMVC.Models.ViewModels.ClienteDashboardViewModel
+
+<h2>Bienvenido, @Model.Usuario.Nombre 👋</h2>
+
+<div class="row mt-4">
+
+    <div class="col-md-4">
+        <div class="card shadow p-3 text-center">
+            <h3>@Model.TotalReservas</h3>
+            <p>Mis Reservas</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow p-3 text-center">
+            <h3>@Model.ConductoresAsignados.Count()</h3>
+            <p>Conductores Asignados</p>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<h3 class="mt-4">Reservas Recientes</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Paquete</th>
+            <th>Fecha</th>
+            <th>Personas</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Reservas)
+        {
+            <tr>
+                <td>@r.Paquete.Nombre</td>
+                <td>@r.FechaReserva.ToString("dd/MM/yyyy")</td>
+                <td>@r.CantidadPersonas</td>
+            </tr>
+        }
+    </tbody>
+</table>

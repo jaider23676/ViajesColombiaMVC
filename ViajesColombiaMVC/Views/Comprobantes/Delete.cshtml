@@ -1,0 +1,16 @@
+﻿@model ViajesColombiaMVC.Models.Comprobante
+
+@{
+    ViewData["Title"] = "Eliminar Comprobante";
+}
+
+<h2>Eliminar Comprobante</h2>
+
+<p>¿Seguro que deseas eliminar este comprobante?</p>
+
+<p><strong>Archivo:</strong> @Model.Archivo</p>
+
+<form method="post">
+    <button class="btn btn-danger">Eliminar</button>
+    <a class="btn btn-secondary" href="/Comprobantes/Index?pagoId=@Model.PagoId">Cancelar</a>
+</form>

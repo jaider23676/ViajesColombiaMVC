@@ -1,0 +1,547 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    int? rolId = HttpContextAccessor.HttpContext.Session.GetInt32("RolId");
+    int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UsuarioId");
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Viajes Colombia</title>
+
+    <!-- CSS Externos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Estilos Globales -->
+    <style>
+        /* ---------- DARK BACKGROUND GLOBAL ---------- */
+        body.bg-panel {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #0d1524, #020409);
+            color: #e3e9f3;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* ---------- NAVBAR DARK GLASS ---------- */
+        .navbar {
+            background: rgba(10, 15, 25, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.35);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #00eaff !important;
+            letter-spacing: 1px;
+        }
+
+        .navbar-brand img {
+            height: 38px;
+            margin-right: 10px;
+        }
+
+        .nav-link {
+            color: #d7dff0 !important;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #00eaff !important;
+            transform: translateY(-2px);
+        }
+
+        /* ---------- CONTENEDOR PRINCIPAL (GLASS) ---------- */
+        main.container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(18px);
+            border-radius: 20px;
+            padding: 35px;
+            margin-top: 100px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.40);
+            animation: fadeIn 0.35s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- BOTÓN FLOTANTE ---------- */
+        #btnInicio {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00eaff, #008cff);
+            box-shadow: 0 0 20px rgba(0, 204, 255, 0.7);
+            color: #000;
+            border: none;
+            font-size: 24px;
+            transition: 0.25s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        #btnInicio:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.9);
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            background: rgba(10, 15, 25, 0.9);
+            color: #cfd6e4;
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        /* ---------- PERSONAJE 3D AREA ---------- */
+        #personaje3D-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 230px;
+            height: 260px;
+            pointer-events: none;
+            opacity: 0.9;
+            z-index: 99;
+        }
+
+        /* ---------- DROPDOWN MENUS ---------- */
+        .dropdown-menu-dark {
+            background: rgba(10, 15, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dropdown-item {
+            color: #d7dff0;
+            padding: 8px 20px;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 234, 255, 0.1);
+            color: #00eaff;
+        }
+
+        .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ---------- ESTILOS PARA MÓDULO TRANSPORTE ---------- */
+        .card-transporte {
+            background: linear-gradient(145deg, rgba(20, 30, 48, 0.8), rgba(10, 18, 32, 0.9));
+            border: 1px solid rgba(0, 234, 255, 0.2);
+            border-radius: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-transporte:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 234, 255, 0.15);
+            border-color: rgba(0, 234, 255, 0.4);
+        }
+
+        .badge-transporte {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-transporte-planificado {
+            background: rgba(0, 150, 255, 0.2);
+            color: #4db8ff;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .badge-transporte-enruta {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffd700;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .badge-transporte-completado {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-transporte {
+            background: linear-gradient(135deg, #00eaff, #008cff);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-transporte:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 140, 255, 0.4);
+        }
+
+        .btn-transporte-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e3e9f3;
+        }
+
+        .btn-transporte-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(0, 234, 255, 0.4);
+            color: #00eaff;
+        }
+
+        .table-transporte {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-transporte thead th {
+            background: rgba(0, 140, 255, 0.2);
+            border-bottom: 2px solid rgba(0, 234, 255, 0.3);
+            color: #4db8ff;
+            font-weight: 600;
+            padding: 15px;
+        }
+
+        .table-transporte tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease;
+        }
+
+        .table-transporte tbody tr:hover {
+            background: rgba(0, 140, 255, 0.1);
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @@media (max-width: 768px) {
+            main.container {
+                padding: 20px;
+                margin-top: 80px;
+                margin-bottom: 40px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            #personaje3D-container {
+                display: none;
+            }
+            
+            #btnInicio {
+                bottom: 80px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        /* ---------- UTILITIES ---------- */
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+
+    <!-- Sección opcional para estilos adicionales de páginas específicas -->
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="bg-panel">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/images/logo.png" alt="Logo" onerror="this.style.display='none'">
+                VIAJES COLOMBIA
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" 
+                    aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="navMenu" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+
+                    <!-- ADMIN -->
+                    @if (rolId == 1)
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Pagos/Dashboard"><i class="bi bi-currency-dollar"></i> Ventas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Admin/Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Usuarios/MiPerfil/@userId"><i class="bi bi-person"></i> Perfil</a></li>
+
+                        <!-- MÓDULO TRANSPORTE PARA ADMIN -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-truck"></i> Transporte
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                                <li><a class="dropdown-item" href="/TransportePaquete"><i class="bi bi-list-check"></i> Gestión de Transportes</a></li>
+                                <li><a class="dropdown-item" href="/Conductores"><i class="bi bi-person-badge"></i> Conductores</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/TransportePaquete/Calendario"><i class="bi bi-calendar-week"></i> Calendario</a></li>
+                                <li><a class="dropdown-item" href="/TransportePaquete/Reporte"><i class="bi bi-graph-up"></i> Reportes</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- MENÚ ADMINISTRACIÓN -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-gear"></i> Administración
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                                <li><a class="dropdown-item" href="/Usuarios"><i class="bi bi-people"></i> Usuarios</a></li>
+                                <li><a class="dropdown-item" href="/Roles"><i class="bi bi-shield"></i> Roles</a></li>
+                                <li><a class="dropdown-item" href="/Permisos"><i class="bi bi-key"></i> Permisos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Paquetes"><i class="bi bi-flag"></i> Paquetes</a></li>
+                                <li><a class="dropdown-item" href="/Proveedores"><i class="bi bi-truck"></i> Proveedores</a></li>
+                                
+                                <li><a class="dropdown-item" href="/Destinos"><i class="bi bi-geo-alt"></i> Destinos</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    <!-- CLIENTE -->
+                    @if (rolId == 2)
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Cliente/Dashboard"><i class="bi bi-house"></i> Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Paquetes"><i class="bi bi-map"></i> Paquetes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Reservas/MisReservas"><i class="bi bi-receipt"></i> Mis Reservas</a></li>
+                        
+                        <!-- MÓDULO TRANSPORTE PARA CLIENTE -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-truck"></i> Mi Transporte
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                                <li><a class="dropdown-item" href="/Reservas/TransporteCliente/@userId"><i class="bi bi-truck"></i> Transporte Asignado</a></li>
+                                <li><a class="dropdown-item" href="/Conductores/MiConductor"><i class="bi bi-person-badge"></i> Mi Conductor</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="nav-item"><a class="nav-link" href="/Usuarios/MiPerfil/@userId"><i class="bi bi-person"></i> Mi Perfil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/CRM/Cliente/@userId"><i class="bi bi-person-heart"></i> CRM</a></li>
+                    }
+
+                    <!-- LOGÍSTICA (Rol 3) -->
+                    @if (rolId == 3)
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Logistica/Dashboard"><i class="bi bi-clipboard-data"></i> Dashboard</a></li>
+                        
+                        <!-- MÓDULO TRANSPORTE PARA LOGÍSTICA -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-truck"></i> Transporte
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                                <li><a class="dropdown-item" href="/TransportePaquete"><i class="bi bi-list-check"></i> Asignar Transporte</a></li>
+                                <li><a class="dropdown-item" href="/Conductores"><i class="bi bi-person-badge"></i> Conductores</a></li>
+                                <li><a class="dropdown-item" href="/TransportePaquete/Calendario"><i class="bi bi-calendar-week"></i> Calendario</a></li>
+                                <li><a class="dropdown-item" href="/TransportePaquete/Reporte"><i class="bi bi-graph-up"></i> Reportes</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="nav-item"><a class="nav-link" href="/Paquetes"><i class="bi bi-flag"></i> Paquetes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Usuarios/MiPerfil/@userId"><i class="bi bi-person"></i> Perfil</a></li>
+                    }
+
+                    <!-- LOGIN / LOGOUT -->
+                    @if (rolId == null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-info fw-semibold" href="/Acceso/Login">
+                                <i class="bi bi-box-arrow-in-right"></i> Ingresar
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-danger fw-semibold" href="/Acceso/Logout">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container py-4 mt-5">
+        @RenderBody()
+    </main>
+
+    <!-- BOTÓN FLOTANTE PARA INICIO - ACTUALIZADO -->
+    @{
+        string inicioUrl = "/Acceso/Login"; // Por defecto si no hay sesión
+        
+        if (rolId == 1) // Admin
+        {
+            inicioUrl = "/Home/Admin";
+        }
+        else if (rolId == 2) // Cliente
+        {
+            inicioUrl = "/Home/Cliente";
+        }
+        else if (rolId == 3) // Logística
+        {
+            inicioUrl = "/Logistica/Dashboard";
+        }
+    }
+
+    <a id="btnInicio" class="btn" title="Inicio" href="@inicioUrl">
+        <i class="bi bi-house-door-fill"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto">
+        © @DateTime.Now.Year Viajes Colombia — Sistema de Reservas Turísticas
+    </footer>
+
+    <!-- PERSONAJE 3D -->
+    <div id="personaje3D-container"></div>
+
+    <!-- SCRIPTS EXTERNOS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <!-- Script del personaje 3D -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById("personaje3D-container");
+            
+            if (container) {
+                try {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+                    camera.position.set(2, 1.6, 3);
+
+                    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                    renderer.setClearColor(0x000000, 0);
+                    container.appendChild(renderer.domElement);
+
+                    scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+                    let light = new THREE.DirectionalLight(0xffffff, 1);
+                    light.position.set(3, 5, 3);
+                    scene.add(light);
+
+                    let mixer;
+
+                    const loader = new THREE.GLTFLoader();
+                    loader.load("/models/personaje.glb", 
+                        function (gltf) {
+                            let model = gltf.scene;
+                            model.scale.set(1.3, 1.3, 1.3);
+                            scene.add(model);
+
+                            mixer = new THREE.AnimationMixer(model);
+                            if (gltf.animations && gltf.animations.length > 0) {
+                                let action = mixer.clipAction(gltf.animations[0]);
+                                action.play();
+                            }
+                        },
+                        undefined,
+                        function (error) {
+                            console.error('Error loading 3D model:', error);
+                        }
+                    );
+
+                    const clock = new THREE.Clock();
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        if (mixer) {
+                            mixer.update(clock.getDelta());
+                        }
+                        renderer.render(scene, camera);
+                    }
+                    animate();
+
+                    // Handle window resize
+                    window.addEventListener('resize', function() {
+                        camera.aspect = container.clientWidth / container.clientHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(container.clientWidth, container.clientHeight);
+                    });
+                } catch (error) {
+                    console.error('Error initializing 3D scene:', error);
+                }
+            }
+
+            // Tooltips de Bootstrap
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Dropdowns
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+    </script>
+
+    <!-- Sección opcional para scripts adicionales de páginas específicas -->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

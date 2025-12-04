@@ -1,0 +1,123 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<style>
+    .reservas-fondo {
+        background: #121212;
+        min-height: 80vh;
+        padding: 40px 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #f8f1e7;
+    }
+
+        .reservas-fondo h2 {
+            color: #ff7f50;
+            text-shadow: 0 0 8px #ff7f50;
+            margin-bottom: 30px;
+        }
+
+    .btn-success {
+        background-color: #ff7f50;
+        border-color: #ff7f50;
+        transition: all 0.3s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #ffa46b;
+            border-color: #ffa46b;
+            color: #121212;
+        }
+
+    table {
+        background: rgba(0,0,0,0.65);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead {
+        background-color: #1f1f1f;
+        color: #ff7f50;
+    }
+
+    tbody tr {
+        background: rgba(0,0,0,0.55);
+        color: #f8f1e7;
+        transition: all 0.2s ease;
+    }
+
+        tbody tr:hover {
+            background: rgba(255,127,80,0.2);
+            transform: translateY(-2px);
+        }
+
+    .btn-danger {
+        background-color: #ff3b3b;
+        border-color: #ff3b3b;
+        transition: all 0.2s ease;
+    }
+
+        .btn-danger:hover {
+            background-color: #ff5c5c;
+            border-color: #ff5c5c;
+            color: #121212;
+        }
+</style>
+
+<div class="reservas-fondo container">
+
+    <h2 class="fw-bold">Listado de Reservas</h2>
+
+    <a asp-action="Create" class="btn btn-success mb-3">➕ Crear Nueva Reserva</a>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Paquete</th>
+                <th>Fecha</th>
+                <th>Personas</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Id</td>
+                    <td>@r.Usuario?.Nombre</td>
+                    <td>@r.Paquete?.Nombre</td>
+                    <td>@r.FechaReserva.ToString("dd/MM/yyyy")</td>
+                    <td>@r.CantidadPersonas</td>
+                    <td>
+                        @switch (r.Estado)
+                        {
+                            case "Confirmada":
+                                <span class="badge" style="background-color:#28a745;">@r.Estado</span>
+                                ;
+                                break;
+                            case "Pendiente":
+                                <span class="badge" style="background-color:#ffc107; color:#121212;">@r.Estado</span>
+                                ;
+                                break;
+                            case "Cancelada":
+                                <span class="badge" style="background-color:#dc3545;">@r.Estado</span>
+                                ;
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@r.Id" class="btn btn-danger btn-sm">
+                            🗑 Eliminar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,32 @@
+﻿@model ViajesColombiaMVC.Models.AsignacionConductor
+
+<h2>Nueva Asignación</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Cliente</label>
+        <select asp-for="UsuarioId" class="form-control">
+            @foreach (var u in ViewBag.Usuarios)
+            {
+                <option value="@u.Id">@u.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Conductor</label>
+        <select asp-for="ConductorId" class="form-control">
+            @foreach (var c in ViewBag.Conductores)
+            {
+                <option value="@c.Id">@c.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Motivo</label>
+        <input asp-for="Motivo" class="form-control" />
+    </div>
+
+    <button class="btn btn-success mt-3">Guardar</button>
+</form>

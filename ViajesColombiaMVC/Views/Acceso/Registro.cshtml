@@ -1,0 +1,207 @@
+﻿@model ViajesColombiaMVC.Models.Usuario
+@{
+    ViewData["Title"] = "Registro de Usuario";
+}
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #1a1a2e;
+        overflow: hidden;
+        color: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #network-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .register-container {
+        position: relative;
+        background: #16213e;
+        padding: 40px 35px;
+        border-radius: 12px;
+        width: 420px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        z-index: 1;
+        text-align: center;
+    }
+
+        .register-container h2 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 26px;
+            color: #00fff7;
+            letter-spacing: 1px;
+        }
+
+    label {
+        display: block;
+        text-align: left;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #00fff7;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: none;
+        font-size: 15px;
+        background: #0f3460;
+        color: #e0e0e0;
+        margin-bottom: 18px;
+        transition: background-color 0.3s ease;
+    }
+
+    input::placeholder {
+        color: #b0b0b0;
+    }
+
+    input:focus {
+        outline: none;
+        background: #16213e;
+        box-shadow: 0 0 8px #00fff7;
+    }
+
+    button {
+        margin-top: 10px;
+        width: 100%;
+        background: linear-gradient(135deg, #00fff7, #0077ff);
+        border: none;
+        border-radius: 30px;
+        padding: 14px 0;
+        font-weight: 700;
+        font-size: 16px;
+        color: #1a1a2e;
+        cursor: pointer;
+        box-shadow: 0 6px 15px rgba(0, 255, 247, 0.7);
+        transition: background 0.3s ease;
+    }
+
+        button:hover {
+            background: linear-gradient(135deg, #0077ff, #00fff7);
+        }
+</style>
+
+<canvas id="network-canvas"></canvas>
+
+<div class="register-container">
+    <h2>Crear Cuenta</h2>
+
+    <form asp-action="Registro" method="post" novalidate>
+        <label asp-for="Nombre">Nombre</label>
+        <input asp-for="Nombre" placeholder="Tu nombre completo" required />
+
+        <label asp-for="Correo">Correo</label>
+        <input asp-for="Correo" type="email" placeholder="correo@ejemplo.com" required />
+
+        <label asp-for="Contrasena">Contraseña</label>
+        <input asp-for="Contrasena" type="password" placeholder="********" required />
+
+        <label asp-for="Telefono">Teléfono</label>
+        <input asp-for="Telefono" placeholder="Opcional" />
+
+        <label asp-for="Direccion">Dirección</label>
+        <input asp-for="Direccion" placeholder="Opcional" />
+
+        <button type="submit">Registrarse</button>
+    </form>
+</div>
+
+<script>
+    (() => {
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let nodes = [];
+        const maxDistance = 120;
+        const nodeCount = 50;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        class Node {
+            constructor() {
+                this.x = random(0, width);
+                this.y = random(0, height);
+                this.vx = random(-0.4, 0.4);
+                this.vy = random(-0.4, 0.4);
+                this.radius = 3;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#00fff7';
+                ctx.fill();
+            }
+        }
+
+        function drawLines() {
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                    if (dist < maxDistance) {
+                        ctx.strokeStyle = `rgba(0, 255, 247, ${1 - dist / maxDistance})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            nodes.forEach(node => {
+                node.update();
+                node.draw();
+            });
+            drawLines();
+            requestAnimationFrame(animate);
+        }
+
+        function init() {
+            resize();
+            nodes = [];
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push(new Node());
+            }
+            animate();
+        }
+
+        window.addEventListener('resize', init);
+        init();
+    })();
+</script>

@@ -1,0 +1,185 @@
+﻿@model ViajesColombiaMVC.Models.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard Administrador";
+}
+
+<style>
+    /* Fondo oscuro para el dashboard */
+    .dashboard-fondo {
+        background: #121212;
+        padding: 40px 20px;
+        min-height: 90vh;
+        color: #f8f1e7;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Tarjetas estadísticas */
+    .dashboard-card {
+        background: rgba(255, 140, 0, 0.1);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+        }
+
+        .dashboard-card i {
+            font-size: 3rem;
+            margin-right: 15px;
+            color: #ff7f50;
+            transition: 0.3s;
+        }
+
+        .dashboard-card:hover i {
+            color: #ff4500;
+            text-shadow: 0 0 8px #ff7f50;
+        }
+
+        .dashboard-card h6 {
+            margin: 0;
+            font-weight: 500;
+            color: #ffd9b3;
+        }
+
+        .dashboard-card h2 {
+            margin: 5px 0 0 0;
+            font-weight: 700;
+            color: #ff7f50;
+        }
+
+        .dashboard-card small {
+            color: #f8f1e7aa;
+        }
+
+    /* Tabla de reservas */
+    .table-dark-custom {
+        background: rgba(30, 30, 30, 0.8);
+        color: #f8f1e7;
+        backdrop-filter: blur(5px);
+    }
+
+        .table-dark-custom th, .table-dark-custom td {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+    .badge-confirmada {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-pendiente {
+        background-color: #ff8c00;
+        color: #121212;
+    }
+
+    .badge-cancelada {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+
+<div class="dashboard-fondo">
+
+    <h2 class="mb-4 text-orange">Panel de Control - Administrador</h2>
+
+    <div class="row g-4 mb-4">
+
+        <!-- Usuarios -->
+        <div class="col-md-3">
+            <div class="dashboard-card d-flex align-items-center">
+                <i class="fas fa-users"></i>
+                <div>
+                    <h6>Usuarios</h6>
+                    <h2>@Model.TotalUsuarios</h2>
+                    <small>+5% vs. mes anterior</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservas -->
+        <div class="col-md-3">
+            <div class="dashboard-card d-flex align-items-center">
+                <i class="fas fa-calendar-check"></i>
+                <div>
+                    <h6>Reservas</h6>
+                    <h2>@Model.TotalReservas</h2>
+                    <small>+10% vs. mes anterior</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paquetes -->
+        <div class="col-md-3">
+            <div class="dashboard-card d-flex align-items-center">
+                <i class="fas fa-box"></i>
+                <div>
+                    <h6>Paquetes</h6>
+                    <h2>@Model.TotalPaquetes</h2>
+                    <small>+8% vs. mes anterior</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conductores -->
+        <div class="col-md-3">
+            <div class="dashboard-card d-flex align-items-center">
+                <i class="fas fa-car"></i>
+                <div>
+                    <h6>Conductores</h6>
+                    <h2>@Model.TotalConductores</h2>
+                    <small>+3% vs. mes anterior</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr style="border-color: rgba(255,140,0,0.3);" />
+
+    <h3 class="mb-3">Reservas recientes</h3>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover table-dark-custom align-middle">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Paquete</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.ReservasRecientes)
+                {
+                    <tr>
+                        <td>@r.Usuario.Nombre</td>
+                        <td>@r.Paquete.Nombre</td>
+                        <td>@r.FechaReserva.ToShortDateString()</td>
+                        <td>
+                            @switch (r.Estado)
+                            {
+                                case "Confirmada":
+                                    <span class="badge badge-confirmada">@r.Estado</span>
+                                    ;
+                                    break;
+                                case "Pendiente":
+                                    <span class="badge badge-pendiente">@r.Estado</span>
+                                    ;
+                                    break;
+                                case "Cancelada":
+                                    <span class="badge badge-cancelada">@r.Estado</span>
+                                    ;
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

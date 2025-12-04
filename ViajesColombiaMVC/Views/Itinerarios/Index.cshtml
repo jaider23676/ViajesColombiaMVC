@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ViajesColombiaMVC.Models.Itinerario>
+
+<h2 class="mb-3">Itinerarios del paquete</h2>
+
+<a class="btn btn-success mb-3" href="/Itinerarios/Create?paqueteId=@ViewBag.PaqueteId">
+    + Agregar itinerario
+</a>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Aún no hay itinerarios registrados.</div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Día</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Horario</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>@i.Dia</td>
+                    <td>@i.Titulo</td>
+                    <td>@i.Descripcion</td>
+                    <td>@(i.HoraInicio?.ToString(@"hh\:mm") ?? "-") - @(i.HoraFin?.ToString(@"hh\:mm") ?? "-")</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@i.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,53 @@
+/* ======== NAVBAR ======== */
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+/* ======== TARJETAS ======== */
+.card-hover:hover {
+    transform: translateY(-6px);
+    transition: .2s;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+}
+
+/* ======== BOTONES ======== */
+.btn-primary {
+    border-radius: 8px;
+}
+
+    .btn-primary:hover {
+        opacity: .9;
+    }
+
+/* ======== TABLAS ======== */
+.table thead {
+    background: #0d6efd;
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background: #f5f8ff;
+}
+
+/* ======== DASHBOARD CARDS ======== */
+.dashboard-box {
+    border-radius: 15px;
+    padding: 25px;
+    color: white;
+}
+
+.bg-info-gradient {
+    background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+}
+
+.bg-primary-gradient {
+    background: linear-gradient(135deg, #0d6efd, #0a56d0);
+}
+
+.bg-success-gradient {
+    background: linear-gradient(135deg, #198754, #0e6f43);
+}
+
+.bg-warning-gradient {
+    background: linear-gradient(135deg, #ffc107, #cc9a00);
+}
